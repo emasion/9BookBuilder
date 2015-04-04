@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head lang="ko">
+    <meta charset="UTF-8">
+    <meta content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+    <link rel="shortcut icon" href="images/favicon.ico">
+
+    <title>9Book Builder</title>
+
+    <!-- build:css(app) styles/main.css -->
+    <link rel="stylesheet" href="styles/common.css">
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/sortable.css">
+    <link rel="stylesheet" href="styles/component.css">
+    <link rel="stylesheet" href="styles/property.css">
+    <!-- endbuild -->
+
+    <!-- build:css(app) styles/vendor.css -->
+    <!--<link rel="stylesheet" href="lib/ngwidgets/styles/ngx.base.css">
+    <link rel="stylesheet" href="lib/ngwidgets/styles/ngx.orange.css">-->
+    <link rel="stylesheet" href="lib/kendoui/styles/kendo.common.min.css" />
+    <link rel="stylesheet" href="lib/kendoui/styles/kendo.moonlight.min.css" />
+    <link rel="stylesheet" href="lib/kendoui/styles/kendo.dataviz.min.css" />
+    <link rel="stylesheet" href="lib/kendoui/styles/kendo.dataviz.moonlight.min.css" />
+    <!-- bower:css -->
+    <!-- endbower -->
+    <!-- endbuild -->
+</head>
+<body>
+
+    <div class="root-container" ui-view>
+        <div kendo-window="uploadProgressPop"
+             k-title="'업로드중...'"
+             k-modal="true"
+             k-visible="false"
+             style="overflow: hidden;">
+            <div class="k-content">
+                <p style="width: 100%;">{{uploadStatus}}</p>
+                <div id="uploadProgressBar"
+                     kendo-progress-bar="progressBar"
+                     k-type="'percent'"
+                     k-min="0"
+                     k-max="100"
+                     style="width: 400px;"
+                     ng-model="uploadProgress"></div>
+            </div>
+        </div>
+    </div>
+    <div class="main-container">
+        <div class="main-top" ui-view="main.menu"></div>
+        <section class="main-middle" ui-view="main.container"></section>
+        <footer class="main-bottom" ui-view="main.copyright"></footer>
+    </div>
+
+    <script data-main="js/requirejs.config" src="vendor/requirejs/require.js"></script>
+</body>
+</html>

@@ -1,0 +1,123 @@
+/*
+* add component btn & menu
+*/
+.options-button {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    cursor: pointer;
+    opacity: .7;
+    z-index: 1;
+    color: rgb(250, 234, 123);
+}
+
+.options-button:hover, .options-button:active {
+    opacity: 1;
+}
+
+span.context-menu-label {
+    font-size: 18px;
+    margin-left: 10px;
+    font-family: '굴림', 'Gulim', 'sans-serif', 'Tahoma', Sans-serif !important;
+    font-weight: bold;
+}
+
+.component-view {
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    text-align: center;
+    color: #f3fbfe;
+}
+
+.view-pattern {
+    background-color: transparent;
+    background-image: linear-gradient(0deg, transparent 24%, rgba(255, 255, 255, .05) 25%, rgba(255, 255, 255, .05) 26%, transparent 27%, transparent 74%, rgba(255, 255, 255, .05) 75%, rgba(255, 255, 255, .05) 76%, transparent 77%, transparent), linear-gradient(90deg, transparent 24%, rgba(255, 255, 255, .05) 25%, rgba(255, 255, 255, .05) 26%, transparent 27%, transparent 74%, rgba(255, 255, 255, .05) 75%, rgba(255, 255, 255, .05) 76%, transparent 77%, transparent);
+    background-size: 50px 50px;
+}
+
+.component-page {
+    background-color: white;
+    display: block;
+    text-align: left;
+    margin: 0 auto;
+    position: relative;
+    background-size: 100% 100%;
+    background-position: center;
+}
+
+.component-content {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.component-select-area {
+    width: 100%;
+    height: 100%;
+    opacity: .4;
+    background-color: #2F7FC2;
+    position: absolute;
+    z-index: 1;
+}
+
+.component-content .resize-handler {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background-color: #333;
+    border: 1px solid #fff;
+    overflow: hidden;
+}
+
+.component-content .resize-handler.resize-se {
+    bottom: -10px;
+    right: -10px;
+    cursor: se-resize;
+}
+
+.component-content .resize-handler.resize-e {
+    top: 50%;
+    right: -10px;
+    margin-top: -5px;
+    cursor: e-resize;
+}
+
+.component-content .resize-handler.resize-ne {
+    top: -10px;
+    right: -10px;
+    cursor: ne-resize;
+}
+
+.component-content .resize-handler.resize-n {
+    top: -10px;
+    left: 50%;
+    margin-left: -5px;
+    cursor: n-resize;
+}
+
+.component-content .resize-handler.resize-nw {
+    top: -10px;
+    left: -10px;
+    cursor: nw-resize;
+}
+
+.component-content .resize-handler.resize-w {
+    top: 50%;
+    left: -10px;
+    margin-top: -5px;
+    cursor: w-resize;
+}
+
+.component-content .resize-handler.resize-sw {
+    left: -10px;
+    bottom: -10px;
+    cursor: sw-resize;
+}
+
+.component-content .resize-handler.resize-s {
+    bottom: -10px;
+    left: 50%;
+    margin-left: -5px;
+    cursor: s-resize;
+}

@@ -1,0 +1,37 @@
+<ol id="sortableList"
+    class="sortable-list"
+    kendo-sortable
+    k-placeholder="placeholder"
+    k-hint="hint"
+    ng-keypress="itemKeyPress($event)"
+    ng-keyup="itemKeyUp($event)"
+    k-on-change="onChange(kendoEvent)">
+    <li ng-repeat="item in listItems"
+        ng-dblclick="itemDBClick($event, item.page)"
+        ng-click="itemClick(item.page)"
+        ng-class="{selected: selectedIndexes.indexOf($index) !== -1}"
+        >
+        <input class="item-value" type="hidden" value="{{item.id}}" />
+        <div class="item-title">{{item.title}}</div>
+        <span class="item-page">{{item.page}}</span>
+    </li>
+</ol>
+<div class="sortable-buttons">
+    <!--<kendo-button type="button" class="k-primary" ng-click="addPdf()"><i class="fa fa-file-text"></i>PDF</kendo-button>-->
+    <input ng-disabled="ingUpload"
+           name="pdfFiles"
+           type="file"
+           kendo-upload
+           k-localization="uploaderLocale"
+           k-async="{ saveUrl: uploadUrl, autoUpload: true }"
+           k-multiple="'false'"
+           k-showfilelist="'false'"
+           k-select="onSelect"
+           k-upload="onUpload"
+           k-progress="onProgress"
+           k-success="onSuccess"
+           k-complete="onComplete"
+            />
+    <kendo-button type="button" class="k-primary" ng-click="addPage()"><i class="fa fa-plus"></i>추가</kendo-button>
+    <kendo-button type="button" class="k-primary" ng-click="deletePages()"><i class="fa fa-minus"></i>삭제</kendo-button>
+</div>

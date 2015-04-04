@@ -1,0 +1,74 @@
+<ul>
+    <li>
+        <div class="property-row">
+            <label for="linkUrl" class="required">Link URL</label>
+            <input id="linkUrl"
+                   name="linkUrl"
+                   class="property-fulltext-input k-textbox"
+                   type="text"
+                   ng-disabled="!componentProperty.options"
+                   ng-model="componentProperty.options.linkUrl"
+                   required />
+        </div>
+        <span class="k-invalid-msg property-msg" data-for="linkUrl"></span>
+    </li>
+    <li>
+        <div class="property-row">
+            <label for="linkTarget" class="required">Target</label>
+            <select kendo-dropdownlist
+                    name="linkTarget"
+                    id="linkTarget"
+                    required
+                    ng-disabled="!componentProperty.options"
+                    ng-model="componentProperty.options.linkTarget"
+                    style="width: 120px;">
+                <option value="_blank">새창</option>
+                <option value="_self">현재창</option>
+            </select>
+        </div>
+        <span class="k-invalid-msg property-msg" data-for="linkTarget"></span>
+    </li>
+    <li>
+        <div class="property-row">
+            <label class="required">BGColor</label>
+            <input kendo-color-picker
+                   ng-model="componentProperty.options.bgColor"
+                   ng-disabled="!componentProperty.options"
+                   k-buttons="false"
+                   k-preview="false"
+                   k-input="false" />
+        </div>
+        <span class="k-invalid-msg property-msg" data-for="bgColor"></span>
+    </li>
+    <li>
+        <div class="property-row">
+            <label class="required">BGColor-over</label>
+            <input kendo-color-picker
+                   ng-model="componentProperty.options.bgColorHover"
+                   ng-disabled="!componentProperty.options"
+                   k-buttons="false"
+                   k-preview="false"
+                   k-input="false" />
+        </div>
+        <span class="k-invalid-msg property-msg" data-for="bgColorHover"></span>
+    </li>
+    <li>
+        <div class="property-row">
+            <label class="required">Opacity</label>
+            <div style="display: inline-flex;">
+                <input style="width: 40px;" type="text" class="k-textbox" value="{{ componentProperty.options.opacity }}" disabled />
+                <div kendo-slider
+                     k-min="0"
+                     k-max="1"
+                     k-show-buttons="false"
+                     k-tooltip="{ enabled: false }"
+                     k-tick-placement="'none'"
+                     k-small-step="0.1"
+                     ng-disabled="!componentProperty.options"
+                     k-ng-model="componentProperty.options.opacity"
+                     style="width: 60px; margin-left: 10px;"></div>
+            </div>
+        </div>
+        <span class="k-invalid-msg property-msg" data-for="opacity"></span>
+    </li>
+</ul>

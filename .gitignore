@@ -8,6 +8,7 @@ logs
 # temp data
 .tmp
 app/.tmp
+app/public
 
 # bower
 app/vendor

@@ -1,0 +1,70 @@
+<ul>
+    <li>
+        <div class="property-row">
+            <label for="positionX" class="required">X</label>
+            <input id="positionX"
+                   name="positionX"
+                   class="property-position-input"
+                   kendo-numerictextbox
+                   type="text"
+                   min="{{ minSize.x }}"
+                   max="{{ maxSize.x }}"
+                   ng-disabled="!componentProperty.position"
+                   ng-model="componentProperty.position.x"
+                   required
+                   data-max-msg="{{ minSize.x }}에서 {{ maxSize.x }}를 입력하세요" />
+        </div>
+        <span class="k-invalid-msg property-msg" data-for="positionX"></span>
+    </li>
+    <li>
+        <div class="property-row">
+            <label for="positionY" class="required">Y</label>
+            <input id="positionY"
+                   name="positionY"
+                   class="property-position-input"
+                   kendo-numerictextbox
+                   type="text"
+                   min="{{ minSize.y }}"
+                   max="{{ maxSize.y }}"
+                   ng-disabled="!componentProperty.position"
+                   ng-model="componentProperty.position.y"
+                   required
+                   data-max-msg="{{ minSize.y }}에서 {{ maxSize.y }}를 입력하세요" />
+        </div>
+        <span class="k-invalid-msg property-msg" data-for="positionY"></span>
+    </li>
+    <li>
+        <div class="property-row">
+            <label for="positionWidth" class="required">Width</label>
+            <input id="positionWidth"
+                   name="positionWidth"
+                   class="property-position-input"
+                   kendo-numerictextbox
+                   type="text"
+                   min="{{ minSize.width }}"
+                   max="{{ maxSize.width }}"
+                   ng-disabled="!componentProperty.size"
+                   ng-model="componentProperty.size.width"
+                   required
+                   data-max-msg="{{ minSize.width }}에서 {{ maxSize.width }}를 입력하세요" />
+        </div>
+        <span class="k-invalid-msg property-msg" data-for="positionWidth"></span>
+    </li>
+    <li>
+        <div class="property-row">
+            <label for="positionHeight" class="required">Height</label>
+            <input id="positionHeight"
+                   name="positionHeight"
+                   class="property-position-input"
+                   kendo-numerictextbox
+                   type="text"
+                   min="{{ minSize.height }}"
+                   max="{{ maxSize.height }}"
+                   ng-disabled="!componentProperty.size"
+                   ng-model="componentProperty.size.height"
+                   required
+                   data-max-msg="{{ minSize.height }}에서 {{ maxSize.height }}를 입력하세요" />
+        </div>
+        <span class="k-invalid-msg property-msg" data-for="positionHeight"></span>
+    </li>
+</ul>

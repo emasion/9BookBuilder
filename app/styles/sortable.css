@@ -1,0 +1,106 @@
+.sortable-view {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.sortable-list {
+    padding: 3px;
+    flex: 1;
+    overflow-y: auto;
+}
+
+.sortable-list li {
+    display: flex;
+    list-style-type: none;
+    position: relative;
+    padding: 6px 8px;
+    color: #FAFAFA;
+    font-size: 1.2em;
+    cursor: url('../images/grab.cur'), default;
+    border: 1px solid rgba(252, 252, 252, 0.1);
+    border-radius: 3px;
+    background-color: #394044;
+    margin-bottom: 2px;
+}
+
+.sortable-list li:last-child {
+    margin-bottom: 0px;
+}
+
+.sortable-list li:hover {
+    background-color: #2f2f2f;
+}
+
+.sortable-list li span {
+    position: absolute;
+    right: 5px;
+}
+
+.sortable-list li.hint {
+    display: block;
+    padding: 10px;
+    width: 200px;
+    background-color: #52aef7;
+    color: #fff;
+}
+
+.sortable-list li.hint:last-child {
+    border-radius: 4px;
+}
+
+.sortable-list li.hint span {
+    color: #fff;
+}
+
+.sortable-list li.placeholder {
+    background-color: #617092;
+    color: #f3fbfe;
+    text-align: right;
+}
+
+.sortable-list li.selected {
+    background-color: #6e89b3;
+}
+
+.sortable-buttons {
+    height: 30px;
+    display: inline-flex;
+}
+
+.sortable-buttons > button {
+    flex: 1
+}
+
+.sortable-buttons > button > i {
+    margin-right: 3px;
+}
+
+/* sortable buttons pdf upload btn overwrite */
+.sortable-buttons > .k-upload {
+    flex: 1;
+    border-width: 0px;
+    cursor: pointer;
+}
+
+.sortable-buttons > .k-upload > .k-dropzone {
+    padding: 0px;
+}
+
+.sortable-buttons > .k-upload > .k-dropzone > .k-upload-button {
+    min-width: inherit;
+    width: 100%;
+}
+
+.sortable-buttons > .k-upload > .k-dropzone > .k-upload-button > input[name="pdfFiles"] {
+    height: 100%;
+    width: 100%;
+}
+
+.sortable-buttons > .k-upload > .k-dropzone > em, .sortable-buttons > .k-upload > .k-upload-files, .sortable-buttons > .k-upload > .k-upload-files {
+    display: none;
+}
+
+.sortable-buttons > .k-upload > .k-dropzone > .k-upload-status {
+    display: none;
+}

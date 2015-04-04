@@ -1,0 +1,55 @@
+<ul>
+    <li>
+        <div class="property-row">
+            <label class="required">Text Edit</label>
+            <kendo-button ng-disabled="!componentProperty.options"
+                          ng-click="textEditor.open().center()">텍스트 수정</kendo-button>
+        </div>
+    </li>
+    <li>
+        <div class="property-row">
+            <label class="required">BGColor</label>
+            <input kendo-color-picker
+                   ng-model="componentProperty.options.bgColor"
+                   ng-disabled="!componentProperty.options"
+                   k-buttons="false"
+                   k-preview="false"
+                   k-input="false" />
+        </div>
+        <span class="k-invalid-msg property-msg" data-for="bgColor"></span>
+    </li>
+    <li>
+        <div class="property-row">
+            <label class="required">FontColor</label>
+            <input kendo-color-picker
+                   ng-model="componentProperty.options.fontColor"
+                   ng-disabled="!componentProperty.options"
+                   k-buttons="false"
+                   k-preview="false"
+                   k-input="false" />
+        </div>
+        <span class="k-invalid-msg property-msg" data-for="fontColor"></span>
+    </li>
+    <li>
+        <div class="property-row">
+            <label class="required">Opacity</label>
+            <div style="display: inline-flex;">
+                <input style="width: 40px;" type="text" class="k-textbox" value="{{ componentProperty.options.opacity }}" disabled />
+                <div kendo-slider
+                     k-min="0"
+                     k-max="1"
+                     k-show-buttons="false"
+                     k-tooltip="{ enabled: false }"
+                     k-tick-placement="'none'"
+                     k-small-step="0.1"
+                     ng-disabled="!componentProperty.options"
+                     k-ng-model="componentProperty.options.opacity"
+                     style="width: 60px; margin-left: 10px;"></div>
+            </div>
+        </div>
+        <span class="k-invalid-msg property-msg" data-for="opacity"></span>
+    </li>
+</ul>
+<div kendo-window="textEditor" k-width="940" k-height="400" k-title="'Text Editor'" >
+    <div text-angular ng-model="componentProperty.options.text"></div>
+</div>

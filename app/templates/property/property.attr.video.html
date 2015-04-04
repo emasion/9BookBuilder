@@ -1,0 +1,61 @@
+<ul>
+    <li>
+        <div class="property-row">
+            <label for="videoTitle" class="required">Title</label>
+            <input id="videoTitle"
+                   name="videoTitle"
+                   class="property-fulltext-input k-textbox"
+                   type="text"
+                   ng-disabled="!componentProperty.options"
+                   ng-model="componentProperty.options.videoTitle"
+                   required />
+        </div>
+    </li>
+    <li style="margin-top: 20px;">
+        <div class="property-row">
+            <div><label>Video</label></div>
+            <i ng-show="componentProperty.options.videoUrl"
+               ng-disabled="ingUpload"
+               ng-click="previewVideo(componentProperty.options.videoUrl)"
+               class="fa fa-youtube-play fa-lg property-image-icon"></i>
+            <input ng-disabled="!componentProperty.options || ingUpload"
+                   name="videoFiles"
+                   type="file"
+                   kendo-upload
+                   k-localization="uploaderLocale"
+                   k-async="{ saveUrl: uploadVideoUrl, autoUpload: true }"
+                   k-multiple="'false'"
+                   k-showfilelist="'false'"
+                   k-select="onSelectVideo"
+                   k-progress="onProgress"
+                   k-success="onSuccessVideo"
+                   k-complete="onComplete"
+                    />
+        </div>
+    </li>
+    <li style="margin-top: 20px;">
+        <div class="property-row">
+            <div><label>Poster</label></div>
+            <i kendo-tooltip
+               k-content="posterImagePreview"
+               ng-show="componentProperty.options.posterUrl"
+               class="fa fa-picture-o fa-lg property-image-icon"></i>
+            <input ng-disabled="!componentProperty.options || ingUpload"
+                   image-type="posterUrl"
+                   name="imageFiles"
+                   type="file"
+                   kendo-upload
+                   k-localization="uploaderLocale"
+                   k-async="{ saveUrl: uploadUrl, autoUpload: true }"
+                   k-multiple="'false'"
+                   k-showfilelist="'false'"
+                   k-select="onSelect"
+                   k-upload="onUpload"
+                   k-progress="onProgress"
+                   k-success="onSuccess"
+                   k-complete="onComplete"
+                    />
+        </div>
+        <span class="k-invalid-msg property-msg" data-for="posterUrl"></span>
+    </li>
+</ul>

@@ -1,0 +1,14 @@
+<ul kendo-context-menu
+    k-filter="'.component-content'"
+    k-on-open="$parent.$parent.onMenuOpen(kendoEvent)"
+    k-on-close="$parent.$parent.onMenuClose(kendoEvent)"
+    k-on-select="$parent.$parent.onMenuSelect(kendoEvent)">
+    <li ng-repeat="menu in $parent.$parent.componentContextMenu">
+        <span data-value="{{menu.value}}">{{menu.text}}</span>
+        <ul ng-if="menu.child">
+            <li ng-repeat="subMenu in menu.child">
+                <span data-value="{{subMenu.value}}">{{subMenu.text}}</span>
+            </li>
+        </ul>
+    </li>
+</ul>

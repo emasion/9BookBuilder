@@ -1,0 +1,80 @@
+<ul>
+    <li>
+        <div class="property-row">
+            <label for="linkUrl" class="required">Link URL</label>
+            <input id="linkUrl"
+                   name="linkUrl"
+                   class="property-fulltext-input k-textbox"
+                   type="text"
+                   ng-disabled="!componentProperty.options"
+                   ng-model="componentProperty.options.linkUrl"
+                   required />
+        </div>
+        <span class="k-invalid-msg property-msg" data-for="linkUrl"></span>
+    </li>
+    <li>
+        <div class="property-row">
+            <label for="linkTarget" class="required">Target</label>
+            <select kendo-dropdownlist
+                    name="linkTarget"
+                    id="linkTarget"
+                    required
+                    ng-disabled="!componentProperty.options"
+                    ng-model="componentProperty.options.linkTarget"
+                    style="width: 120px;">
+                <option value="_blank">새창</option>
+                <option value="_self">현재창</option>
+            </select>
+        </div>
+        <span class="k-invalid-msg property-msg" data-for="linkTarget"></span>
+    </li>
+    <li style="margin-top: 20px;">
+        <div class="property-row">
+            <div><label>Image</label></div>
+            <i kendo-tooltip
+               ng-show="componentProperty.options.imageUrl"
+               k-content="imagePreview"
+               class="fa fa-picture-o fa-lg property-image-icon"></i>
+            <input ng-disabled="!componentProperty.options || ingUpload"
+                   image-type="imageUrl"
+                   name="imageFiles"
+                   type="file"
+                   kendo-upload
+                   k-localization="uploaderLocale"
+                   k-async="{ saveUrl: uploadUrl, autoUpload: true }"
+                   k-multiple="'false'"
+                   k-select="onSelect"
+                   k-upload="onUpload"
+                   k-progress="onProgress"
+                   k-success="onSuccess"
+                   k-complete="onComplete"
+                    />
+        </div>
+        <span class="k-invalid-msg property-msg" data-for="imageUrl"></span>
+    </li>
+    <li style="margin-top: 20px;">
+        <div class="property-row">
+            <div><label>Image-over</label></div>
+            <i kendo-tooltip
+               k-content="imageHoverPreview"
+               ng-show="componentProperty.options.imageUrlHover"
+               class="fa fa-picture-o fa-lg property-image-icon"></i>
+            <input ng-disabled="!componentProperty.options || ingUpload"
+                   image-type="imageUrlHover"
+                   name="imageFiles"
+                   type="file"
+                   kendo-upload
+                   k-localization="uploaderLocale"
+                   k-async="{ saveUrl: uploadUrl, autoUpload: true }"
+                   k-multiple="'false'"
+                   k-showfilelist="'false'"
+                   k-select="onSelect"
+                   k-upload="onUpload"
+                   k-progress="onProgress"
+                   k-success="onSuccess"
+                   k-complete="onComplete"
+                    />
+        </div>
+        <span class="k-invalid-msg property-msg" data-for="imageUrlHover"></span>
+    </li>
+</ul>

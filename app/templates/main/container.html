@@ -1,0 +1,13 @@
+<div kendo-splitter
+     class="main-container-splitter"
+     k-panes="[ { size: '200px', max: '400px' }, null, { size: '250px', max: '400px' } ]">
+    <div>
+        <div class="container-view sortable-view" ui-view="container.sortable"></div>
+    </div>
+    <div class="view-pattern">
+        <div class="container-view" ui-view="container.controlview"></div>
+    </div>
+    <div>
+        <div class="container-view" ui-view="container.property"></div>
+    </div>
+</div>

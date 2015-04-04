@@ -1,0 +1,25 @@
+/* 감성개발  2014-03-03 */
+@charset "utf-8";
+/* reset */
+html, body, div, span, object, iframe, h1, h2, h3, h4, h5, h6, p, button, blockquote, a, address, img, strong, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, input
+{margin:0; padding:0;}
+
+/* HTML5 display-role reset for older browsers */
+article, aside, canvas, details, figcaption, figure, footer, header, nav, menu, nav, section {margin:0; padding:0; display:block;}
+html, body {width:100%; height:100%; background:#fff; -webkit-text-size-adjust:none;}
+html {overflow: hidden;}
+body, input, button, textarea, select {font-family:'굴림', 'Gulim', 'sans-serif', 'Tahoma', Sans-serif !important; font-size:14px; color:#000; line-height:1.2;}
+input, select, button{vertical-align:middle}
+li {list-style:none}
+img {max-width:100%; border:none;}
+img {margin:0; padding:0; vertical-align:top;}
+fieldset, iframe{border:none;}
+textarea {resize:none;}
+legend {display:none;}
+button {margin:0; padding:0; border:0; cursor:pointer;}
+table {border-spacing:0; border-collapse:collapse;}
+caption, th, td {text-align:left;}
+em, address{font-style:normal;}
+label {cursor:pointer;}
+object {outline:none;}
+a, a:hover, a:active {text-decoration: none;}
