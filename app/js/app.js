@@ -11,6 +11,8 @@ define(function(require) {
 
     // constant
     var env = require('js/commons/constant/env')
+    var format = require('js/commons/constant/format')
+    var upload = require('js/commons/constant/upload')
 
     // config
     var debugHttp = require('js/commons/config/debugHttp')
@@ -28,6 +30,8 @@ define(function(require) {
         'kendo.directives',
     ])
         .constant('env', env)
+        .constant('format', format)
+        .constant('upload', upload)
         .config(debugHttp)
         .config(exceptionHandler)
         .config(sessionRecover)

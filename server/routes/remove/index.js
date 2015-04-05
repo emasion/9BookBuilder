@@ -8,7 +8,6 @@ var fs = require('fs')
 var _ = require('lodash')
 
 exports.removeFiles = function (req, res) {
-
     var localPath = __dirname + '\\..\\..\\..\\app\\public\\contents\\'
     var deleteCount = 0
     console.log('[request] remove', req.body)
@@ -35,28 +34,31 @@ exports.removeFiles = function (req, res) {
             })
         })
     }
-
-
-
-
-
-    // TODO: 삭제
-
-    /*fs.readFile(req.files.imageFiles.path, function (error, data) {
-     var localPath = __dirname + '\\..\\..\\..\\app\\'
-     var imageUrl = 'public\\contents\\' + req.files.imageFiles.name
-     var destination = localPath + imageUrl
-     console.log(data, destination)
-     fs.writeFile(destination, data, function (error) {
-     if(error){
-     console.log(error)
-     throw error
-     }else{
-     res.end('success')
-     }
-     })
-     })*/
 }
+
+exports.removeBgImage = function (req, res) {
+    var localPath = __dirname + '\\..\\..\\..\\app\\public\\pages\\'
+    console.log('[request] remove', req.body)
+    function removeImage (imageName) {
+        fs.exists(localPath + imageName, function (exists) {
+            if (exists) {
+                fs.unlink(localPath + imageName, function (err) {
+                    if (err) {
+                        throw err
+                    }
+                    console.log('successfully deleted : ' + imageName)
+                    res.json({'result': 'success'})
+                })
+            } else {
+                res.json({'result': 'fail', 'message': 'not found file'})
+            }
+        })
+    }
+    if (_.isString(req.body.name)) {
+        removeImage(req.body.name)
+    }
+}
+
 
 exports.removeFolder = function (req, res) {
 

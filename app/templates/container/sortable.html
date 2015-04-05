@@ -18,7 +18,11 @@
 </ol>
 <div class="sortable-buttons">
     <!--<kendo-button type="button" class="k-primary" ng-click="addPdf()"><i class="fa fa-file-text"></i>PDF</kendo-button>-->
-    <input ng-disabled="ingUpload"
+    <kendo-button type="button"
+                  class="k-primary"
+                  ng-click="uploadSelectFile('pdf', uploadCallback)"
+                  title="PDF추가"><i class="fa fa-file-text"></i>PDF</kendo-button>
+    <!--<input ng-disabled="ingUpload"
            name="pdfFiles"
            type="file"
            kendo-upload
@@ -31,7 +35,7 @@
            k-progress="onProgress"
            k-success="onSuccess"
            k-complete="onComplete"
-            />
+            />-->
     <kendo-button type="button" class="k-primary" ng-click="addPage()"><i class="fa fa-plus"></i>추가</kendo-button>
     <kendo-button type="button" class="k-primary" ng-click="deletePages()"><i class="fa fa-minus"></i>삭제</kendo-button>
 </div>

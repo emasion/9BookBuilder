@@ -29,6 +29,9 @@
 <body>
 
     <div class="root-container" ui-view>
+        <div style="position: absolute; top: -90000px; left: -90000px">
+            <ng-include src="'templates/global/uploader.html'" include-replace></ng-include>
+        </div>
         <div kendo-window="uploadProgressPop"
              k-title="'업로드중...'"
              k-modal="true"

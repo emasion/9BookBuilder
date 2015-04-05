@@ -4,7 +4,7 @@ define(function (require) {
     'use strict'
 
     // @njInject
-    return function ContainerPropertyController ($scope, $rootScope, $timeout, env, configData, ContentsService) {
+    return function ContainerPropertyController ($scope, $rootScope, $timeout, env, format, configData, ContentsService) {
         console.info('ContainerPropertyController')
 
         var $ = angular.element
@@ -17,9 +17,6 @@ define(function (require) {
             }
             return baseUrl + type + '.html'
         }
-
-        var IMAGE_UPLOAD_FORMAT = ['.jpg', '.JPG', '.png', '.PNG', '.gif', '.GIF']
-        var VIDEO_UPLOAD_FORMAT = ['.mp4', '.MP4', '.webm', '.WebM', '.wmv', '.WMV', '.avi', '.AVI', '.flv', '.FLV', '.mkv', '.MKV']
 
         $scope.componentProperty
         $scope.minSize = {
@@ -59,104 +56,39 @@ define(function (require) {
         // upload property
         $scope.uploadUrl = env.host + 'upload/image'
         $scope.uploadVideoUrl = env.host + 'upload/video'
-        $scope.deleteFilesUrl = env.host + 'remove/files'
-        $scope.deleteFolderUrl = env.host + 'remove/folder'
 
-        $rootScope.ingUpload
         $scope.imageUploadType
-
-        $scope.uploaderLocale = {
-            select: '업로드',
-            done: '',
-            statusUploaded: ''
-        }
-
-        // upload 할 이미지 선택시 event
-        $scope.onSelect = function (e) {
-            var selectOk = true
-            _.forEach(e.files, function (value) {
-                if (!_.findWhere(IMAGE_UPLOAD_FORMAT, value.extension)) {
-                    e.preventDefault()
-                    alert('이미지 파일만 업로드 할 수 있습니다.')
-                    selectOk = false
-                }
-            })
-            if (selectOk) {
-                $rootScope.ingUpload = true
-                //$scope.$apply()
+        // property image upload callback
+        $scope.uploadCallback = {
+            onSuccess: function (e) {
+                var response = e.response
+                var fileName = response.data.name
+                var imageType = $scope.imageUploadType
+                // 기존 등록되 있는 이미지를 삭제 요청한다.
+                $rootScope.requestRemoveContentsFiles([$scope.componentProperty.options[imageType]], function (result) {
+                    console.log('[success remove image]', result)
+                })
+                // 현재 선택된 컴포넌트 이미지를 교체한다.
+                $scope.componentProperty.options[imageType] = fileName
+                $scope.imageUploadType = undefined
+                $scope.$digest()
             }
         }
 
-        // upload 시작시에
-        $scope.onUpload = function (e) {
-            console.log('[upload]', e)
-            $scope.imageUploadType = e.sender.element.attr('image-type')
-        }
-
-        // progress
-        $scope.onProgress = function (e) {
-            //console.log('****** upload :', e.percentComplete)
-            $rootScope.uploadProgressModal(e.percentComplete, e.files[0].name)
-            $scope.$apply()
-        }
-
-        // upload 성공시
-        $scope.onSuccess = function (e) {
-            console.log('[success upload image]', e)
-            var response = e.response
-
-            var fileName = response.data.name
-            var imageType = $scope.imageUploadType
-
-            // 기존 등록되 있는 이미지를 삭제 요청한다.
-            $rootScope.requestRemoveContentsFiles([$scope.componentProperty.options[imageType]], function (result) {
-                console.log('[success remove image]', result)
-            })
-
-            // 현재 선택된 컴포넌트 이미지를 교체한다.
-            $scope.componentProperty.options[imageType] = fileName
-            $scope.$digest()
-        }
-
-        // image upload 완료시
-        $scope.onComplete = function (e) {
-            console.log(e)
-            $rootScope.ingUpload = false
-            $rootScope.uploadProgressModal(-1)
-            $scope.imageUploadType = undefined
-            $scope.$apply()
-        }
-
-        // upload 할 이미지 선택시 event
-        $scope.onSelectVideo = function (e) {
-            var selectOk = true
-            _.forEach(e.files, function (value) {
-                if (!_.findWhere(VIDEO_UPLOAD_FORMAT, value.extension)) {
-                    e.preventDefault()
-                    alert('비디오 파일만 업로드 할 수 있습니다.')
-                    selectOk = false
-                }
-            })
-            if (selectOk) {
-                $rootScope.ingUpload = true
-                $scope.$apply()
+        // property video upload callback
+        $scope.uploadCallbackVideo = {
+            onSuccess: function (e) {
+                console.log('[success upload video]', e)
+                var response = e.response
+                var fileName = response.data.name
+                // 기존 등록되 있는 video 를 삭제 요청한다.
+                $rootScope.requestRemoveContentsFiles([$scope.componentProperty.options.videoUrl], function (result) {
+                    console.log('[success remove video]', result)
+                })
+                // 현재 선택된 컴포넌트 video 를 교체한다.
+                $scope.componentProperty.options.videoUrl = fileName
+                $scope.$digest()
             }
-        }
-
-        // upload 성공시
-        $scope.onSuccessVideo = function (e) {
-            console.log('[success upload video]', e)
-            var response = e.response
-            var fileName = response.data.name
-
-            // 기존 등록되 있는 video 를 삭제 요청한다.
-            $rootScope.requestRemoveContentsFiles([$scope.componentProperty.options.videoUrl], function (result) {
-                console.log('[success remove video]', result)
-            })
-
-            // 현재 선택된 컴포넌트 video 를 교체한다.
-            $scope.componentProperty.options.videoUrl = fileName
-            $scope.$digest()
         }
 
         // video player
@@ -285,7 +217,6 @@ define(function (require) {
         }
 
         init()
-
     }
 
 })

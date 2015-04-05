@@ -1,6 +1,7 @@
 .property-form {
     box-sizing: border-box;
 }
+
 .property-form .head-text {
     font-size: 1.2em;
     font-weight: bold;
@@ -13,6 +14,7 @@
     color: #2F2F2F;
     box-sizing: border-box;
 }
+
 .property-form .sub-head-text {
     font-size: 1.1em;
     display: block;
@@ -23,44 +25,56 @@
     margin: 10px 0px;
     box-sizing: border-box;
 }
+
 .property-form ul {
     list-style-type: none;
     margin: 0;
     padding: 0;
 }
+
 .property-form li {
     margin: 15px 0px;
 }
+
 .property-form .valid {
     color: green;
 }
+
 .property-form .invalid {
     color: red;
 }
+
 .property-form .property-row {
 
 }
+
 .property-form .property-row.flex-row {
     display: flex;
 }
+
 .property-form label {
      display: inline-block;
      width: 100px;
      text-align: right;
      padding-right: 10px;
  }
+
 .property-form .property-fulltext-input {
     width: 120px;
 }
+
 .property-form .required {
     font-weight: bold;
 }
+
 .property-form .accept, .property-form .status {
     padding-left: 70px;
 }
+
 .property-form .property-position-input {
     width: 120px;
 }
+
 .property-form .k-invalid-msg {
     margin-top: 5px;
     padding: 5px;
@@ -70,41 +84,6 @@
 }
 
 .property-form .property-image-icon {
-    position: absolute;
     z-index: 1;
-    /*margin-top: 20px;
-    margin-left: 120px;*/
-    margin-top: -18px;
-    margin-left: 195px;
     cursor: pointer;
-}
-
-/* overwrite */
-.property-form ul.k-upload-files {
-    display: none;
-}
-
-.property-form .k-dropzone > em {
-    display: none;
-}
-
-.property-form .property-row .k-upload {
-    margin-top: -28px;
-    margin-left: 115px;
-    border: none;
-    background: none;
-}
-
-.property-form .property-row .k-dropzone {
-    padding: 0px;
-}
-
-.property-form .property-row .k-dropzone .k-upload-status {
-    line-height: normal;
-    color: #212A33;
-    display: none;
-}
-
-.property-form .property-row .k-dropzone .k-upload-button {
-    min-width: 73px;
 }

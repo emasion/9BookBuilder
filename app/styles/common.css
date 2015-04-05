@@ -23,3 +23,28 @@ em, address{font-style:normal;}
 label {cursor:pointer;}
 object {outline:none;}
 a, a:hover, a:active {text-decoration: none;}
+
+/* margin */
+.margin-right-3 {
+    margin-right: 3px;
+}
+
+.margin-right-5 {
+    margin-right: 5px;
+}
+
+.margin-right-10 {
+    margin-right: 10px;
+}
+
+.margin-left-3 {
+    margin-left: 3px;
+}
+
+.margin-left-5 {
+    margin-left: 5px;
+}
+
+.margin-left-10 {
+    margin-left: 10px;
+}

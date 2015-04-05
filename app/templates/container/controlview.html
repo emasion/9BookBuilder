@@ -1,5 +1,9 @@
-<i class="fa fa-plus-square fa-2x options-button" ></i>
+<div class="control-view-menu">
+    <i class="fa fa-plus-square fa-2x options-button add-component-button" title="컴포넌트 추가"></i>
+    <i class="fa fa-picture-o fa-2x options-button" ng-click="uploadSelectFile('bgImage', uploadCallback)" title="배경이미지 변경"></i>
+</div>
 <ng-include src="'templates/contextmenu/add.component.html'" ></ng-include>
+<ng-include src="'templates/contextmenu/view.component.html'" ></ng-include>
 <view-component page-contents="pageContents"
                 page-number="pageNumber"
                 page-image="pageImage"

@@ -1,22 +1,28 @@
 /*
 * add component btn & menu
 */
-.options-button {
+
+.control-view-menu {
     position: absolute;
     top: 5px;
     right: 5px;
     cursor: pointer;
     opacity: .7;
     z-index: 1;
-    color: rgb(250, 234, 123);
+    display: flex;
 }
 
-.options-button:hover, .options-button:active {
+.control-view-menu .options-button {
+    color: rgb(250, 234, 123);
+    margin: 0 2px;
+}
+
+.control-view-menu .options-button:hover, .control-view-menu .options-button:active {
     opacity: 1;
 }
 
 span.context-menu-label {
-    font-size: 18px;
+    font-size: 14px;
     margin-left: 10px;
     font-family: '굴림', 'Gulim', 'sans-serif', 'Tahoma', Sans-serif !important;
     font-weight: bold;
@@ -120,4 +126,8 @@ span.context-menu-label {
     left: 50%;
     margin-left: -5px;
     cursor: s-resize;
+}
+
+.context-menu > li {
+    font-size: 16px;
 }

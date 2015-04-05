@@ -36,3 +36,8 @@
 .main-bottom > p {
     margin: 0px;
 }
+
+/* uploader */
+.root-container .k-upload {
+    position: absolute;
+}
