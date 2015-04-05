@@ -51,14 +51,12 @@ define(function (require) {
         $scope.componentContextMenu = [
             { text: '복사', value: 'copyComponent' },
             { text: '삭제', value: 'deleteComponent' },
-            { text: '위로', value: 'topZIndexComponent' },
-            { text: '맨위로', value: 'firstTopZIndexComponent' },
-            { text: '아래로', value: 'bottomZIndexComponent' },
-            { text: '맨아래로', value: 'lastBottomZIndexComponent' },
-            /*{ text: '저장', child: [
-                { text: 'submenu1', value: 'submenu1Handler' },
-                { text: 'submenu2', value: 'submenu2Handler' }
-            ] }*/
+            { text: '레이어', child: [
+                { text: '위로', value: 'topZIndexComponent' },
+                { text: '맨위로', value: 'firstTopZIndexComponent' },
+                { text: '아래로', value: 'bottomZIndexComponent' },
+                { text: '맨아래로', value: 'lastBottomZIndexComponent' }
+            ] }
         ]
 
         $scope.onMenuOpen = function (e) {

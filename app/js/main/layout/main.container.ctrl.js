@@ -4,9 +4,8 @@ define(function (require) {
     'use strict'
 
     // @njInject
-    return function MainContainerController ($rootScope, $scope, ContentsService) {
+    return function MainContainerController ($rootScope, $scope, format, ContentsService) {
         console.info('MainContainerController')
-
         var contentsChangeHandler = function (e, pageContents) {
             if (pageContents) {
                 // server 에 현재 변경된 PAGE의 contents 를 저장한다.
@@ -14,6 +13,23 @@ define(function (require) {
                     // 저장 후 처리
                     $rootScope.commandPerformer('changedPageContents', pageContents)
                 })
+            }
+        }
+
+        // select bg image 선택
+        var selectBgImage = function () {
+            $rootScope.uploadSelectFile('bgImage', $scope.uploadCallback)
+        }
+
+        var performerBgImage = function (imageName) {
+            $rootScope.commandPerformer('changeBgImage', imageName)
+        }
+
+        var viewContextMenuSelectHandler = function (command) {
+            switch (command) {
+                case 'changeBgImage':
+                    selectBgImage()
+                    break
             }
         }
 
@@ -27,6 +43,26 @@ define(function (require) {
                 var componentType = $(e.item).attr('data-value')
                 // add component 호출
                 $rootScope.commandPerformer('addComponent', componentType)
+            }
+
+            // view page context menu handler
+            $scope.onViewContextMenu = function (e) {
+                console.log($(e.item).attr('data-value'))
+                viewContextMenuSelectHandler($(e.item).attr('data-value'))
+            }
+
+            // view bg image upload callback
+            $scope.uploadCallback = {
+                onSelect: function (e) {},
+                onUpload: function (e) {},
+                onProgress: function (e) {},
+                onSuccess: function (e) {
+                    var response = e.response
+                    var fileName = response.data.name
+                    // upload 한 image 로 page 교체해준다.
+                    performerBgImage(fileName)
+                },
+                onComplete: function (e) {}
             }
         }
 

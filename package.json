@@ -1,11 +1,11 @@
 {
-  "name": "9Book_Builder",
+  "name": "9BookBuilder",
   "version": "0.0.1",
   "author": {
     "name": "emasion"
   },
   "repository": {
-    "github": "emasion/9Book_Builder.git"
+    "github": "emasion/9BookBuilder.git"
   },
   "devDependencies": {
     "amd-optimize": "^0.3.1",

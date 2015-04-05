@@ -2,7 +2,7 @@
 
 define(function (require) {
     // @ngInject
-    return function ContentsService ($http, $q, env, HttpService) {
+    return function ContentsService ($http, $q, env, HttpService, FileService) {
 
         var service = {}
         var _contents
@@ -35,7 +35,7 @@ define(function (require) {
         }
 
         service.setContentsData = function (id, contents) {
-            var defer = $q.defer()
+            //var defer = $q.defer()
             var findPageIndex
 
             if (_.isUndefined(id) || _.isUndefined(_contents)) {
@@ -54,7 +54,9 @@ define(function (require) {
                 _contents[findPageIndex].items = contents
             }
 
-            HttpService.setService(_contentsUrl, _contents)
+            return service.saveContentsData()
+
+            /*HttpService.setService(_contentsUrl, _contents)
                 .then(function (result) {
                     console.log('success')
                     defer.resolve(result)
@@ -64,7 +66,7 @@ define(function (require) {
                     defer.resolve()
                 })
 
-            return defer.promise
+            return defer.promise*/
         }
 
         service.addPage = function (addPageData) {
@@ -87,8 +89,7 @@ define(function (require) {
         }
 
         service.changePage = function (newListItems) {
-            var defer = $q.defer()
-
+            //var defer = $q.defer()
             _contents = _.sortBy(_contents, function (n) {
                 return _.result(_.findWhere(this, { id : n.id }), 'page') - 1
             }, newListItems)
@@ -97,7 +98,7 @@ define(function (require) {
                 n.page = key + 1
             })
 
-            HttpService.setService(_contentsUrl, _contents)
+            /*HttpService.setService(_contentsUrl, _contents)
                 .then(function (result) {
                     console.log('success')
                     defer.resolve(result)
@@ -106,12 +107,13 @@ define(function (require) {
                     console.error(error)
                     defer.resolve()
                 })
-
-            return defer.promise
+*/
+            return service.saveContentsData()
+            //return defer.promise
         }
 
         service.deletePages = function (indexes) {
-            var defer = $q.defer()
+            //var defer = $q.defer()
             indexes = _.sortBy(indexes)
             _.forEach(indexes, function (index, key) {
                 var deleteIndex = index - key
@@ -124,7 +126,9 @@ define(function (require) {
                 })
             })
 
-            //_contents = newListItems
+            return service.saveContentsData()
+
+            /*//_contents = newListItems
             HttpService.setService(_contentsUrl, _contents)
                 .then(function (result) {
                     console.log('success')
@@ -135,6 +139,44 @@ define(function (require) {
                     defer.resolve()
                 })
 
+            return defer.promise*/
+        }
+
+        service.changeBgImage = function (pageId, imageName) {
+            var defer = $q.defer()
+            var beforeImageName = _contents[_.findIndex(_contents, { id : pageId })].pageImage
+            _contents[_.findIndex(_contents, { id : pageId })].pageImage = imageName
+            service.saveContentsData().then(function (resp) {
+                if(resp.data.result === 'success') {
+                    // 이전 page image 삭제
+                    if (beforeImageName) {
+                        //service.saveContentsData()
+                        FileService.removeBgImage(beforeImageName).then(function (resp) {
+                            defer.resolve(resp)
+                        })
+                    } else {
+                        defer.resolve(resp)
+                    }
+                } else {
+                    console.error('changeBgError')
+                    defer.reject()
+                }
+            })
+            return defer.promise
+        }
+
+        service.saveContentsData = function () {
+            var defer = $q.defer()
+            //_contents = newListItems
+            HttpService.setService(_contentsUrl, _contents)
+                .then(function (result) {
+                    console.log('success')
+                    defer.resolve(result)
+                })
+                .catch(function(error) {
+                    console.error(error)
+                    defer.resolve()
+                })
             return defer.promise
         }
 

@@ -33,6 +33,31 @@ exports.uploadImage = function (req, res) {
     })
 }
 
+exports.uploadBgImage = function (req, res) {
+
+    var localPath = __dirname + '\\..\\..\\..\\app\\public\\pages\\'
+    var imageName = req.files.bgImageFiles.name
+    var destination = localPath + imageName
+
+    console.log('[request] upload', req.files.bgImageFiles)
+    fs.readFile(req.files.bgImageFiles.path, function (error, data) {
+        //console.log(data, destination)
+        fs.writeFile(destination, data, function (error) {
+            if(error){
+                console.error(error)
+                throw error
+            }else{
+                res.json({
+                    'result': 'success',
+                    'data': {
+                        name: imageName
+                    }
+                })
+            }
+        })
+    })
+}
+
 exports.uploadVideo = function (req, res) {
 
     var localPath = __dirname + '\\..\\..\\..\\app\\public\\contents\\'

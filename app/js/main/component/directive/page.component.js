@@ -15,7 +15,7 @@ define(function (require) {
                 pageNumber: '='
             },
             templateUrl: '../../../../templates/component/page.html',
-            controller: function ($rootScope, $scope, $element, $timeout, $q, ConfigService, ContentsCreateService) {
+            controller: function ($rootScope, $scope, $element, $timeout, $q, ConfigService, ContentsService, ContentsCreateService) {
 
                 $scope.pageWidth
                 $scope.pageHeight
@@ -51,7 +51,7 @@ define(function (require) {
 
                     // bgImage
                     if ($scope.pageImage) {
-                        changeBgImage('', $scope.pageImage)
+                        changeBgImage($scope.pageImage)
                     }
 
                     function changedZIndexComponents (items) {
@@ -189,9 +189,20 @@ define(function (require) {
                         removeComponent(id)
                     }
 
-                    function changeBgImage (e, changeImage) {
-                        console.log(e, changeImage)
-                        $scope.pageStyle['background-image'] = changeImage ? 'url(' + pagesPath + changeImage + ')' : 'none'
+                    // 서버에 변경 된 bgImage 에 대한 처리
+                    function changeBgImageHandler (e, imageName) {
+                        ContentsService.changeBgImage($rootScope.currentPageId, imageName).then(function (resp) {
+                            if(resp.status === 200) {
+                                changeBgImage(imageName)
+                            }
+                            console.log(resp.data)
+                        })
+                    }
+
+                    // 실제 page-component 에 변경 이미지 적용
+                    function changeBgImage (imageName) {
+                        console.log(imageName)
+                        $scope.pageStyle['background-image'] = imageName ? 'url(' + pagesPath + imageName + ')' : 'none'
                         //$scope.pageImageUrl = pagesPath + changeImage
                     }
 
@@ -201,7 +212,7 @@ define(function (require) {
                     $rootScope.$on('lastBottomZIndexComponent', lastBottomZIndexHandler)
                     $rootScope.$on('addComponent', addComponentHandler)
                     $rootScope.$on('deleteComponent', deleteComponentHandler)
-                    $rootScope.$on('changeBgImage', changeBgImage)
+                    $rootScope.$on('changeBgImage', changeBgImageHandler)
 
                     // pageContents watch
                     $scope.$watch('pageContents', function () {
@@ -211,7 +222,7 @@ define(function (require) {
 
                     // pageImage watch
                     $scope.$watch('pageImage', function (newPageImage) {
-                        changeBgImage('', newPageImage)
+                        changeBgImage(newPageImage)
                     })
 
                     // test - html2canvas test

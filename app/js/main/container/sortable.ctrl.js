@@ -4,12 +4,11 @@ define(function (require) {
     'use strict'
 
     // @njInject
-    return function ContainerSortableController ($scope, $rootScope, $timeout, env, listItems, configData, ContentsService) {
+    return function ContainerSortableController ($scope, $rootScope, $q, $timeout, env, format, listItems, configData, ContentsService) {
         console.info('ContainerSortableController')
 
         var $ = angular.element
         var sortableList = $('#sortableList')
-        var UPLOAD_FILE_FORMAT = ['.pdf', '.PDF']
 
         $scope.selectedIndex = 0
         $scope.selectedIndexes = [0]
@@ -36,17 +35,25 @@ define(function (require) {
                     page: key + 1
                 })
             })
-            $scope.changePageCall(newListItems)
+            $scope.changePageCall(newListItems).then(function () {
+                // 선택된 아이템을 초기화
+                $scope.selectedIndex = e.newIndex
+                $scope.selectedIndexes = [$scope.selectedIndex]
+                $scope.viewChange()
+            })
         }
 
         $scope.changePageCall = function (newList) {
+            var defer = $q.defer()
             // 서버에 변경내용 저장
             ContentsService.changePage(newList).then(function (resp) {
                 if (resp.data.result === 'success') {
-                    console.log('add page success!!')
+                    console.log('change Page success!!')
                     $scope.listItems = newList
                 }
+                defer.resolve(true)
             })
+            return defer.promise
         }
 
         // item click handler
@@ -186,79 +193,29 @@ define(function (require) {
             console.log('------------ pdf upload -------------')
         }
 
-        $scope.uploadUrl = env.host + 'upload/pdf'
-        $scope.uploaderLocale = {
-            select: 'PDF',
-            done: '',
-            statusUploaded: ''
-        }
-
-        // upload 할 이미지 선택시 event
-        $scope.onSelect = function (e) {
-            var selectOk = true
-            _.forEach(e.files, function (value) {
-                if (!_.findWhere(UPLOAD_FILE_FORMAT, value.extension)) {
-                    e.preventDefault()
-                    alert('PDF 파일만 업로드 할 수 있습니다.')
-                    selectOk = false
+        $scope.uploadCallback = {
+            onSuccess: function (e) {
+                var response = e.response
+                var addPages
+                var addItems = []
+                if (response.result === 'success') {
+                    console.log('[success upload pdf]', response)
+                    addPages = response.data.pages
+                    _.forEach(addPages, function (pageName, key) {
+                        var addPage = $scope.listItems.length + parseInt(key) + 1
+                        addItems.push(makeAddItem(addPage, pageName))
+                    })
+                    // 서버에 추가
+                    ContentsService.addPages(addItems).then(function (resp) {
+                        if (resp.data.result === 'success') {
+                            console.log('add pages success!!')
+                            // 추가 완료 후 listItems 에 적용
+                            $scope.listItems = resp.config.data
+                        }
+                    })
                 }
-            })
-            if (selectOk) {
-                $rootScope.ingUpload = true
-                //$scope.$apply()
+                $scope.$digest()
             }
-        }
-
-        // upload 시작시에
-        $scope.onUpload = function (e) {
-            console.log('[upload]', e)
-        }
-
-        // progress
-        $scope.onProgress = function (e) {
-            $rootScope.uploadProgressModal(e.percentComplete, e.files[0].name)
-            $scope.$apply()
-        }
-
-        // upload 성공시
-        $scope.onSuccess = function (e) {
-            var response = e.response
-            var fileName = response.data.name
-            var addPages
-            var addItems = []
-
-            if (response.result === 'success') {
-                console.log('[success upload pdf]', response)
-                addPages = response.data.pages
-
-                _.forEach(addPages, function (pageName, key) {
-                    var addPage = $scope.listItems.length + parseInt(key) + 1
-                    addItems.push(makeAddItem(addPage, pageName))
-                })
-
-                // 서버에 추가
-                ContentsService.addPages(addItems).then(function (resp) {
-                    if (resp.data.result === 'success') {
-                        console.log('add pages success!!')
-                        $scope.listItems = resp.config.data
-                        /*if ($scope.listItems.length !== resp.config.data.length) {
-                         $scope.listItems.push(_.pick(resp.config.data[resp.config.data.length - 1], 'id', 'title', 'page'))
-                         }*/
-                    }
-                })
-
-            }
-
-            $scope.$digest()
-
-            // TODO: 받아온 변환 pages Images 를 바탕으로 페이지 추가 기능 구현
-        }
-
-        // pdf upload 완료시
-        $scope.onComplete = function (e) {
-            $rootScope.ingUpload = false
-            $rootScope.uploadProgressModal(-1)
-            $scope.$apply()
         }
 
         // add page
