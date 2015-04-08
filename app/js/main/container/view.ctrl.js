@@ -17,9 +17,16 @@ define(function (require) {
             $scope.pageImage = contents.pageImage
         }
 
+        var undefinedPage = function () {
+            $scope.pageNumber = -1
+            $scope.pageContents = []
+            $scope.pageImage = null
+        }
+
         var pageChangeHandler = function (event, id) {
             if (_.isUndefined(id)) {
-                return
+                // 빈 페이지로 처리
+                undefinedPage()
             }
             // get current contents
             ContentsService.getContentsData(id)
@@ -41,6 +48,10 @@ define(function (require) {
         $scope.$on('changedPageContents', pageContentsChangedHandler)
         // 선택한 페이지가 변경될 때 발생
         $scope.$on('currentPageChange', pageChangeHandler)
+        // bgImage 가 변경되었을 때 발생
+        $scope.$on('changedBgImage', function (e, imageName) {
+            $scope.pageImage = imageName
+        })
 
         // binding data
         $scope.pageNumber = 1

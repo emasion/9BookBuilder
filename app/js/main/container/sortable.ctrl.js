@@ -253,7 +253,7 @@ define(function (require) {
                                 return $scope.selectedIndex > n
                             }).length
                         }
-                        $scope.selectedIndexes = [$scope.selectedIndex]
+                        $scope.selectedIndexes = $scope.selectedIndex < 0 ? [] : [$scope.selectedIndex]
                         $scope.viewChange()
                     }
                 })

@@ -4,7 +4,7 @@ define(function (require) {
     'use strict'
 
     // @njInject
-    return function MainContainerController ($rootScope, $scope, format, ContentsService) {
+    return function MainContainerController ($rootScope, $scope, $timeout, format, ContentsService) {
         console.info('MainContainerController')
         var contentsChangeHandler = function (e, pageContents) {
             if (pageContents) {
@@ -43,6 +43,14 @@ define(function (require) {
                 var componentType = $(e.item).attr('data-value')
                 // add component 호출
                 $rootScope.commandPerformer('addComponent', componentType)
+            }
+
+            // view page context menu open event handler
+            $scope.onOpenContextMenu = function (e) {
+                if (_.isUndefined($rootScope.currentPageId)) {
+                    e.preventDefault()
+                    return false
+                }
             }
 
             // view page context menu handler

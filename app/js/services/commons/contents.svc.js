@@ -89,7 +89,6 @@ define(function (require) {
         }
 
         service.changePage = function (newListItems) {
-            //var defer = $q.defer()
             _contents = _.sortBy(_contents, function (n) {
                 return _.result(_.findWhere(this, { id : n.id }), 'page') - 1
             }, newListItems)
@@ -97,26 +96,19 @@ define(function (require) {
             _.forEach(_contents, function (n, key) {
                 n.page = key + 1
             })
-
-            /*HttpService.setService(_contentsUrl, _contents)
-                .then(function (result) {
-                    console.log('success')
-                    defer.resolve(result)
-                })
-                .catch(function(error) {
-                    console.error(error)
-                    defer.resolve()
-                })
-*/
             return service.saveContentsData()
-            //return defer.promise
         }
 
         service.deletePages = function (indexes) {
-            //var defer = $q.defer()
+            var defer = $q.defer()
+            var deletePageNames = []
             indexes = _.sortBy(indexes)
             _.forEach(indexes, function (index, key) {
                 var deleteIndex = index - key
+                if (_contents[deleteIndex].pageImage) {
+                    // pages 삭제할 이미지 이름을 넣는다
+                    deletePageNames.push(_contents[deleteIndex].pageImage)
+                }
                 _contents.splice(deleteIndex, 1)
                 _.forEach(_contents, function (n, key) {
                     // 삭제하는 페이지 보다 높은 페이지
@@ -126,20 +118,15 @@ define(function (require) {
                 })
             })
 
-            return service.saveContentsData()
-
-            /*//_contents = newListItems
-            HttpService.setService(_contentsUrl, _contents)
-                .then(function (result) {
-                    console.log('success')
-                    defer.resolve(result)
-                })
-                .catch(function(error) {
-                    console.error(error)
-                    defer.resolve()
-                })
-
-            return defer.promise*/
+            service.saveContentsData().then(function (resp) {
+                defer.resolve(resp)
+                // pages image 삭제
+                if (deletePageNames.length > 0) {
+                    //service.saveContentsData()
+                    FileService.removeBgImages(deletePageNames)
+                }
+            })
+            return defer.promise
         }
 
         service.changeBgImage = function (pageId, imageName) {
@@ -151,7 +138,7 @@ define(function (require) {
                     // 이전 page image 삭제
                     if (beforeImageName) {
                         //service.saveContentsData()
-                        FileService.removeBgImage(beforeImageName).then(function (resp) {
+                        FileService.removeBgImages([beforeImageName]).then(function (resp) {
                             defer.resolve(resp)
                         })
                     } else {

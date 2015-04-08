@@ -194,6 +194,7 @@ define(function (require) {
                         ContentsService.changeBgImage($rootScope.currentPageId, imageName).then(function (resp) {
                             if(resp.status === 200) {
                                 changeBgImage(imageName)
+                                $rootScope.commandPerformer('changedBgImage', imageName)
                             }
                             console.log(resp.data)
                         })
@@ -202,6 +203,9 @@ define(function (require) {
                     // 실제 page-component 에 변경 이미지 적용
                     function changeBgImage (imageName) {
                         console.log(imageName)
+                        if (imageName === '' || imageName === null) {
+                            imageName = undefined
+                        }
                         $scope.pageStyle['background-image'] = imageName ? 'url(' + pagesPath + imageName + ')' : 'none'
                         //$scope.pageImageUrl = pagesPath + changeImage
                     }

@@ -63,7 +63,7 @@ var app = express()
     .post('/upload/pdf', upload.uploadPdf)
     .post('/remove/files', remove.removeFiles)
     .post('/remove/folder', remove.removeFolder)
-    .post('/remove/bgimage', remove.removeBgImage)
+    .post('/remove/bgimages', remove.removeBgImages)
     .get('/test', function(req, res) {
         //res.sendfile('./.tmp/index.html')
         res.json({result: 'ok'})

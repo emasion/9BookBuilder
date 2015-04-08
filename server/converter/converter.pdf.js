@@ -72,7 +72,7 @@ exports.converterPdf = function (pdfId, callback) {
         })
 */
 
-        var oldSpawn = spawn
+        /*var oldSpawn = spawn
 
         function mySpawn() {
             console.log('spawn called')
@@ -81,7 +81,7 @@ exports.converterPdf = function (pdfId, callback) {
             return result
         }
 
-        spawn = mySpawn
+        spawn = mySpawn*/
 
         var opts = [
             "-dQUIET",
@@ -96,6 +96,8 @@ exports.converterPdf = function (pdfId, callback) {
             '-sOutputFile=' + tempFolder + fileName + '_%04d' + '.png',
             localPath + fileName + '.pdf'
         ]
+
+        console.log( 'opts: ', opts)
 
         var gs = spawn( "gswin64c", opts )
         gs.stdout.on( 'data', function( data ) {

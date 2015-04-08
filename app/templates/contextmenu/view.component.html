@@ -1,5 +1,6 @@
 <ul kendo-context-menu
     k-filter="'.component-view'"
+    k-on-open="onOpenContextMenu(kendoEvent)"
     k-on-select="onViewContextMenu(kendoEvent)">
     <!--<li ng-repeat="menu in $parent.$parent.componentContextMenu">
         <span data-value="{{menu.value}}">{{menu.text}}</span>
