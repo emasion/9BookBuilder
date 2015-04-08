@@ -36,9 +36,12 @@ exports.removeFiles = function (req, res) {
     }
 }
 
-exports.removeBgImage = function (req, res) {
+exports.removeBgImages = function (req, res) {
     var localPath = __dirname + '\\..\\..\\..\\app\\public\\pages\\'
+    var deleteCount = 0
+    var totalCount
     console.log('[request] remove', req.body)
+
     function removeImage (imageName) {
         fs.exists(localPath + imageName, function (exists) {
             if (exists) {
@@ -47,15 +50,28 @@ exports.removeBgImage = function (req, res) {
                         throw err
                     }
                     console.log('successfully deleted : ' + imageName)
-                    res.json({'result': 'success'})
+                    deleteCount++
+                    if (deleteCount >= totalCount) {
+                        res.json({'result': 'success'})
+                    }
                 })
             } else {
                 res.json({'result': 'fail', 'message': 'not found file'})
             }
         })
     }
-    if (_.isString(req.body.name)) {
-        removeImage(req.body.name)
+
+    if (_.isArray(req.body)) {
+        totalCount = req.body.length
+        _.forEach(req.body, function (fileName) {
+            //check
+            removeImage(fileName)
+        })
+    } else {
+        if (_.isString(req.body.name)) {
+            totalCount = 1
+            removeImage(req.body.name)
+        }
     }
 }
 
