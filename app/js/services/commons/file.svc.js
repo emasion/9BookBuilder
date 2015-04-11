@@ -8,6 +8,7 @@ define(function (require) {
         var _removeContentsFileUrl = env.host + 'remove/files'
         var _removeContentsFolderUrl = env.host + 'remove/folder'
         var _removeBgPageUrl = env.host + 'remove/bgimages'
+        var _saveThumbnailImagesUrl = env.host + 'save/thumbnail'
 
         service.removeFiles = function (files) {
             var defer = $q.defer()
@@ -49,6 +50,10 @@ define(function (require) {
                     defer.resolve()
                 })
             return defer.promise
+        }
+
+        service.saveThumbnailImages = function (imagesData) {
+            return HttpService.setService(_saveThumbnailImagesUrl, imagesData)
         }
 
         return service

@@ -3,13 +3,13 @@
 */
 
 .control-view-menu {
-    position: absolute;
-    top: 5px;
-    right: 5px;
+    position: fixed;
     cursor: pointer;
     opacity: .7;
     z-index: 1;
     display: flex;
+    margin-top: 5px;
+    margin-left: 5px;
 }
 
 .control-view-menu .options-button {

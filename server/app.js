@@ -13,6 +13,7 @@ var config = require('./routes/config')
 var contents = require('./routes/contents')
 var upload = require('./routes/upload')
 var remove = require('./routes/remove')
+var converter = require('./converter/converter.js')
 
 // config
 var serverPort = conf.port.server_dev
@@ -21,6 +22,7 @@ var fileUploadDone = false
 
 // app
 var app = express()
+    .use(require('express-promise')())
     .use(json())
     .use(bodyParser.urlencoded())
     //.use(express.json())
@@ -56,6 +58,7 @@ var app = express()
     .get('/', routes.index)
     .get('/config', config.getConfig)
     .get('/contents', contents.getContents)
+    .post('/converter/progress', converter.getProgress)
     .post('/contents', contents.postContents)
     .post('/upload/image', upload.uploadImage)
     .post('/upload/bgimage', upload.uploadBgImage)

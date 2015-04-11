@@ -4,7 +4,7 @@ define(function (require) {
     'use strict'
 
     // @njInject
-    return function ContainerSortableController ($scope, $rootScope, $q, $timeout, env, format, listItems, configData, ContentsService) {
+    return function ContainerSortableController ($scope, $rootScope, $q, $timeout, env, format, listItems, configData, ContentsService, ConverterService) {
         console.info('ContainerSortableController')
 
         var $ = angular.element
@@ -193,14 +193,49 @@ define(function (require) {
             console.log('------------ pdf upload -------------')
         }
 
+        var uploadFieldId
         $scope.uploadCallback = {
+            onProgress: function (e) {},
             onSuccess: function (e) {
-                var response = e.response
+                uploadFieldId = e.response.data.fileId
+            },
+            onComplete: function () {
                 var addPages
                 var addItems = []
-                if (response.result === 'success') {
-                    console.log('[success upload pdf]', response)
-                    addPages = response.data.pages
+
+                // 100% 나 상태가 끝날때 까지 체크
+                function checkProgress () {
+                    //console.log('** checkProgress **', uploadFieldId)
+                    ConverterService.converterProgress(uploadFieldId).then(function (result) {
+                        //console.log('result]', result)
+                        var resultData = result.data
+                        if (resultData.result === 'success') {
+                            // 진행중
+                            if (resultData.status === 'converting') {
+                                console.log('--------- converting -------- : ' + resultData.progress + '%')
+                                $rootScope.uploadProgressModal(resultData.progress, '변환중')
+                                _.delay(checkProgress, 1000)
+                            }
+                            // 변환 성공
+                            else if (resultData.status === 'success') {
+                                console.log('--------- file copy ing ---------')
+                                $rootScope.loadingProgressModal('start', '불러오기 중')
+                            }
+                            // 완료
+                            else if (resultData.status === 'complete') {
+                                console.log('--------- complete ---------')
+                                $rootScope.uploadProgressModal(-1, '변환중')
+                                $rootScope.loadingProgressModal('end', '불러오기 중')
+                                //console.log(result.files)
+                                convertComplete(resultData.files)
+                            }
+                        }
+                    })
+                }
+
+                function convertComplete (files) {
+                    console.log('[complete converter files]', files.length)
+                    addPages = files
                     _.forEach(addPages, function (pageName, key) {
                         var addPage = $scope.listItems.length + parseInt(key) + 1
                         addItems.push(makeAddItem(addPage, pageName))
@@ -214,7 +249,13 @@ define(function (require) {
                         }
                     })
                 }
-                $scope.$digest()
+
+                if (uploadFieldId) {
+                    $timeout(function () {
+                        $scope.$digest()
+                        checkProgress()
+                    })
+                }
             }
         }
 

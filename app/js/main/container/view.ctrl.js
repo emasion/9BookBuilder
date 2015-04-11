@@ -4,7 +4,7 @@ define(function (require) {
     'use strict'
 
     // @njInject
-    return function ContainerViewController ($scope, $rootScope, ContentsService) {
+    return function ContainerViewController ($scope, $rootScope, $timeout, ContentsService) {
         console.info('ContainerViewController')
 
         var contentsLoad = function (contents) {
@@ -35,6 +35,10 @@ define(function (require) {
                         contentsLoad(data)
                     }
                 })
+            $timeout(function () {
+                // thumbnail capture
+                $rootScope.commandPerformer('thumbnailCapture', id)
+            }, 500)
         }
 
         var pageContentsChangedHandler = function (e, pageContents) {

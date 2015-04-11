@@ -11,16 +11,7 @@ define(function (require) {
 
         $rootScope.currentPageId
         $rootScope.selectComponent
-        //$rootScope.uploadNameGlobal
-        //$rootScope.uploaderLocaleGlobal
-        //$rootScope.uploadUrlGlobal
-        //$rootScope.uploadMultipleGlobal
-        //$rootScope.uploadShowFileListGlobal
-        //$rootScope.onSelectGlobal
-        //$rootScope.onUploadGlobal
-        //$rootScope.onProgressGlobal
-        //$rootScope.onSuccessGlobal
-        //$rootScope.onCompleteGlobal
+        $rootScope.thumbnailBase64Data = []
 
         $rootScope.linkHandler = function (linkUrl) {
             console.log(linkUrl)
@@ -33,6 +24,10 @@ define(function (require) {
             }
             if (command === 'selectComponent') {
                 $rootScope.selectComponent = params
+            }
+            if (command === 'thumbnailImageUpdate') {
+                $rootScope.thumbnailBase64Data[params.id] = params.imgBase64
+                console.log('[thumbnailBase64Data]', $rootScope.thumbnailBase64Data)
             }
             $rootScope.$broadcast(command, params)
         }
@@ -161,7 +156,6 @@ define(function (require) {
             $compile(uploadInput)($rootScope)
 
             $timeout(function () {
-                //$rootScope.$apply()
                 // btn 호출
                 uploader.find('input[type=file]').trigger('click')
             })
@@ -175,41 +169,57 @@ define(function (require) {
         $rootScope.uploadProgressModal = function (percent, fileName) {
             function progressManualHandler (value) {
                 if ($scope.progressBar) {
+                    var progressBarEl = $scope.progressBar.element
+                    if (progressBarEl.find('.k-state-selected').length < 1) {
+                        var selectedTag = $('<div/>').addClass('k-state-selected')
+                        selectedTag.append(progressBarEl.find('.k-progress-status-wrap'))
+                        progressBarEl.append(selectedTag)
+                    }
                     $scope.progressBar.element.find('.k-state-selected').css({ width: value + '%'})
                     $scope.progressBar.element.find('.k-progress-status').text(value + '%')
                 }
             }
-            //var progressBar = $('#uploadProgressBar').data('kendoProgressBar')
             $scope.uploadStatus = fileName || 'upload file'
             if (!$scope.openPopup) {
                 if ($scope.progressBar) {
                     // open popup
                     $scope.uploadProgressPop.open().center()
                     $scope.openPopup = true
-                    //$scope.uploadProgress = 0
-                    $scope.progressBar.value(percent || 0)
                     progressManualHandler(percent)
+                    // overlay 를 show 못하는 버그가 있어 수동으로 처리
+                    _.delay(function () { $('.k-overlay').show() }, 100)
                 }
             }
             else if (percent > 0 && $scope.openPopup) {
                 // progress
                 if (percent) {
-                    //debugger
-                    //$scope.uploadProgress = percent
-                    //$scope.progressBar.value(percent)
-                    console.log(percent)
                     // progressBar 에 대한 변경 오류가 있어 수동으로 처리
                     progressManualHandler(percent)
                 }
             }
             else if (percent === -1 && $scope.openPopup) {
                 // close popup
-                //$scope.uploadProgress = 0
                 progressManualHandler(0)
                 $scope.openPopup = false
-                //$scope.progressBar.value(0)
                 $scope.uploadProgressPop.close()
             }
+        }
+
+        // loading modal
+        $scope.openLoadingPopup = false
+        $scope.loadingTitle
+        $rootScope.loadingProgressModal = function (cmd, title) {
+            if ($scope.openLoadingPopup) {
+                return
+            }
+            if (cmd === 'start' && !$scope.openLoadingPopup) {
+                $scope.loadingPop.open().center()
+                $scope.openLoadingPopup = true
+            } else {
+                $scope.loadingPop.close()
+                $scope.openLoadingPopup = false
+            }
+            $scope.loadingTitle = title
         }
 
         // global key event bind
@@ -226,6 +236,8 @@ define(function (require) {
                 $rootScope.pressingKeyCode = undefined
             })
         })
+
+
         /*// key press event
         $scope.itemKeyPress = function (event) {
             console.log('itemKeyPress', event.keyCode)

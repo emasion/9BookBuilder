@@ -210,6 +210,35 @@ define(function (require) {
                         //$scope.pageImageUrl = pagesPath + changeImage
                     }
 
+                    // thumbnail capture 처리
+                    function thumbnailCaptureHandler (e, id) {
+                        html2canvas($element, {
+                            onrendered: function (canvas) {
+                                //var imageDataUrl = canvas.toDataURL("image/jpg")
+                                //$('body').append('<img style="display: block;" src="' + imageDataUrl + '" />')
+                                /**
+                                * 서버에 image 저장 예제
+                                **/
+                                var dataURL = canvas.toDataURL('image/jpg')
+
+                                $rootScope.commandPerformer('thumbnailImageUpdate', {
+                                    id: id,
+                                    imgBase64: dataURL
+                                })
+                                // 서버에 저장
+                                /*$.ajax({
+                                    type: "POST",
+                                    url: "script.php",
+                                    data: {
+                                        imgBase64: dataURL
+                                    }
+                                }).done(function(o) {
+                                    console.log('saved')
+                                })*/
+                            }
+                        })
+                    }
+
                     $rootScope.$on('topZIndexComponent', topZIndexHandler)
                     $rootScope.$on('bottomZIndexComponent', bottomZIndexHandler)
                     $rootScope.$on('firstTopZIndexComponent', firstTopZIndexHandler)
@@ -217,6 +246,7 @@ define(function (require) {
                     $rootScope.$on('addComponent', addComponentHandler)
                     $rootScope.$on('deleteComponent', deleteComponentHandler)
                     $rootScope.$on('changeBgImage', changeBgImageHandler)
+                    $rootScope.$on('thumbnailCapture', thumbnailCaptureHandler)
 
                     // pageContents watch
                     $scope.$watch('pageContents', function () {

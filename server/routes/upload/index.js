@@ -102,17 +102,15 @@ exports.uploadPdf = function (req, res) {
                 console.error(error)
                 throw error
             } else {
-                converterPdf.converterPdf(pdfId, function (pageNames) {
-                    console.log('[pageNames]', pageNames)
-                    setTimeout(function () {
-                        res.json({
-                            'result': 'success',
-                            'data': {
-                                name: pdfName,
-                                fileId: pdfId,
-                                pages: pageNames
-                            }
-                        })
+                converterPdf.converterPdf(pdfId, function (params) {
+                    // 먼저 upload return 한다
+                    res.json({
+                        'result': 'success',
+                        'data': {
+                            name: pdfName,
+                            fileId: pdfId,
+                            confData: params
+                        }
                     })
                 })
             }

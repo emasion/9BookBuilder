@@ -7,27 +7,36 @@ define(function (require) {
         var service = {}
         var _cacheData = []
 
-        service.getService = function (url) {
+        service.getService = function (url, params) {
             var defer = $q.defer()
 
             if (_cacheData[url]) {
                 defer.resolve(_cacheData[url])
             } else {
                 $http.defaults.useXDomain = true
-                $http.get(url)
+                /*$http.get(url)
                     .then(function(data) {
                         _cacheData[url] = data
                         defer.resolve(data)
                     })
                     .catch(function(error) {
                         console.error(error)
-                    })
+                    })*/
+                $http({
+                    url: url,
+                    method: 'GET',
+                    params: params
+                }).then(function (data, status, headers, config) {
+                    _cacheData[url] = data
+                    defer.resolve(data)
+                }).catch(function (err) {
+                    console.error(err)
+                })
             }
             return defer.promise
         }
 
         service.setService = function (url, data, config) {
-            //TODO: Server 에서 처리해야 함
             var defer = $q.defer()
 
             $http.defaults.useXDomain = true
@@ -42,14 +51,6 @@ define(function (require) {
                 .catch(function(error) {
                     console.error(error)
                 })
-
-            /*$http.put(url, data, config)
-                .then(function(result) {
-                    defer.resolve(result)
-                })
-                .catch(function(error) {
-                    console.error(error)
-                })*/
 
             return defer.promise
         }

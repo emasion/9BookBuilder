@@ -34,7 +34,18 @@
 
 .property-form li {
     margin: 15px 0px;
+    display: inline-flex;
 }
+
+.property-form li .property-id-text {
+    text-overflow: ellipsis;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    flex: 1;
+    width: 130px;
+}
+
 
 .property-form .valid {
     color: green;
