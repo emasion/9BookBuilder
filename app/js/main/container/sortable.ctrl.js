@@ -60,11 +60,11 @@ define(function (require) {
         $scope.isBeforeShiftKey = false   // 이전번째 shift key 를 눌러 작업했는지 여부
         $scope.cacheShiftKeyIndex   // shift key 작업을 시작했을 때 기준 인덱스를 저장
         $scope.itemClick = function (page) {
-            // TODO: key event 와 연계 - ctrl : select item 추가, shift : 범위 item 추가
+            // key event 와 연계 - ctrl : select item 추가, shift : 범위 item 추가
             if ($rootScope.pressingKeyCode) {
                 // shift : 다중 범위 선택
                 if ($rootScope.pressingKeyCode === 16) {
-                    // TODO: $scope.selectedIndex 와 page - 1 과 비교해서 작은 수 부터 큰 수 까지 범위를 구하고 선택처리
+                    // $scope.selectedIndex 와 page - 1 과 비교해서 작은 수 부터 큰 수 까지 범위를 구하고 선택처리
                     var firstIndex, lastIndex, keyIndex
 
                     // 기준 인덱스를 설정하는데 이전에 shift key 작업을 했으면 이전 index 를 사용
@@ -311,11 +311,29 @@ define(function (require) {
             init()
         })
 
+        var addOnEvent = function () {
+            $scope.$on('addPdf', function () {
+                $rootScope.uploadSelectFile('pdf', $scope.uploadCallback)
+            })
+            $scope.$on('addPage', function () {
+                $scope.addPage()
+            })
+            $scope.$on('removePage', function () {
+                $scope.deletePages()
+            })
+            /*$scope.$on('viewPage', function (e, index) {
+                $scope.selectedIndex = index
+                $scope.selectedIndexes = index
+                $scope.viewChange()
+            })*/
+        }
+
         var init = function () {
             $scope.viewChange()
             $timeout(function () {
                 $scope.onLoaded()
             })
+            addOnEvent()
         }
 
         var makeAddItem = function (page, bgImageName) {

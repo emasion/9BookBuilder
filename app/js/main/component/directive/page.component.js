@@ -195,6 +195,9 @@ define(function (require) {
                             if(resp.status === 200) {
                                 changeBgImage(imageName)
                                 $rootScope.commandPerformer('changedBgImage', imageName)
+                                $timeout(function () {
+                                    $rootScope.commandPerformer('thumbnailCapture', $rootScope.currentPageId)
+                                }, 500)
                             }
                             console.log(resp.data)
                         })
@@ -219,7 +222,7 @@ define(function (require) {
                                 /**
                                 * 서버에 image 저장 예제
                                 **/
-                                var dataURL = canvas.toDataURL('image/jpg')
+                                var dataURL = canvas.toDataURL('image/png')
 
                                 $rootScope.commandPerformer('thumbnailImageUpdate', {
                                     id: id,

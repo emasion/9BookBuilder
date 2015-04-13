@@ -14,6 +14,10 @@ define(function (require) {
             return _.findWhere(_contents, { '_id': pageId })
         }
 
+        service.getContents = function () {
+            return _contents
+        }
+
         service.getContentsData = function (pageId) {
             var defer = $q.defer()
 
@@ -165,6 +169,10 @@ define(function (require) {
                     defer.resolve()
                 })
             return defer.promise
+        }
+
+        service.getContentsLength = function () {
+            return _contents.length
         }
 
         return service

@@ -12,6 +12,9 @@ define(function (require) {
                 ContentsService.setContentsData($rootScope.currentPageId, pageContents).then(function () {
                     // 저장 후 처리
                     $rootScope.commandPerformer('changedPageContents', pageContents)
+                    $timeout(function () {
+                        $rootScope.commandPerformer('thumbnailCapture', $rootScope.currentPageId)
+                    }, 500)
                 })
             }
         }
