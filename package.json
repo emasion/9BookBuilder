@@ -16,6 +16,7 @@
     "express": "^4.12.2",
     "express-json": "^1.0.0",
     "express-promise": "^0.4.0",
+    "fs-extra": "^0.18.0",
     "gulp": "^3.8.10",
     "gulp-amd-jst": "0.0.1",
     "gulp-autoprefixer": "^1.0.1",

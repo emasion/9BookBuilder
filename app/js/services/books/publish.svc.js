@@ -14,7 +14,8 @@ define(function (require) {
                 bookName: bookName,
                 thumbnail: thumbnailData
             }).then(function (data) {
-                defer.resolve(data.data)
+                defer.resolve(data)
+                window.alert(data)
             })
             .catch(function(error) {
                 console.error(error)
