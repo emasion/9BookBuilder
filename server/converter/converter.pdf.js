@@ -67,7 +67,7 @@ exports.converterPdf = function (pdfId, callback) {
             "-sDEVICE=png16m",
             "-dTextAlphaBits=4",
             "-dGraphicsAlphaBits=4",
-            "-r150",
+            "-r300",
             '-sOutputFile=' + tempFolder + fileName + '_%04d' + '.png',
             localPath + fileName + '.pdf'
         ]

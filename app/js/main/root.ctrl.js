@@ -248,7 +248,6 @@ define(function (require) {
                         }
                     })
                     console.log(pickThumbnailData)
-                    // TODO: PublishService 연동 처리
                     PublishService.publish(cmdType, bookTitle, pickThumbnailData)
 
                 } else {
@@ -266,7 +265,7 @@ define(function (require) {
                         $timeout(function () {
                             // 캡쳐
                             $rootScope.commandPerformer('thumbnailCapture', id)
-                        }, 300)
+                        }, 1000)
                     } else {
                         captureThumbnailImage()
                     }
@@ -277,7 +276,6 @@ define(function (require) {
             function gleanThumbnail () {
                 // 전체 페이지에 대한 체크 및 수집
                 allContents = ContentsService.getContents()
-
                 offCallEvent = $scope.$on('thumbnailImageUpdate', function (e, params) {
                     //currentPageNumber = currentPageNumber + 1
                     captureThumbnailImage()

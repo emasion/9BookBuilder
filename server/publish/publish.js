@@ -8,6 +8,7 @@ var fs = require('fs-extra')
 var Q = require('q')
 //var mkdirp = require('mkdirp')
 var _ = require('lodash')
+var debug = require('debug')('publish')
 var publishTempPath = 'app/viewer/preview/'
 var bookResourcePath = 'app/viewer/resource/'
 var publicSourcePath = 'app/public/'
@@ -19,7 +20,8 @@ var copyPublicToTemp = function (tempPath) {
         if (err) {
             return console.error(err)
         }
-        console.log("success! copyPublicToTemp : ", tempPublicPath)
+        //console.log("success! copyPublicToTemp : ", tempPublicPath)
+        console.log("success! copyPublicToTemp : %s", tempPublicPath)
         defer.resolve(tempPublicPath)
     })
     return defer.promise
@@ -31,7 +33,8 @@ var copyResourceToTemp = function (tempPath) {
         if (err) {
             return console.error(err)
         }
-        console.log("success! copyResourceToTemp : ", tempPath)
+        //console.log("success! copyResourceToTemp : ", tempPath)
+        console.log("success! copyResourceToTemp : %s", tempPath)
         // public data copy
         copyPublicToTemp(tempPath).then(function (path) {
             defer.resolve(path)
@@ -45,14 +48,24 @@ var makeThumbnailImages = function (tempPath, imagesData) {
     var thumbnailImagePath = tempPath + 'thumbs/'
     var totalImageLength = _.size(imagesData)
     var count = 0
+
+    console.log("start! thumbnail total size %s", totalImageLength)
+
     _.forEach(imagesData, function (data, key) {
         var fileUrl = thumbnailImagePath + key + '.png'
-        console.log('[f]' + fileUrl)
-        fs.writeFile(fileUrl, data, 'binary', function (err) {
+        //console.log('[f]' + fileUrl)
+        var imageData = data.split(',')[1]
+        //console.log(imageData)
+        console.log("& decoding!" + fileUrl + '-----------&%s', imageData.substr(0, 10))
+
+        var decodedImage = new Buffer(imageData, 'base64')
+
+        fs.writeFile(fileUrl, decodedImage, function (err) {
             if (err) {
                 throw err
             }
-            console.log('File saved.' + key)
+            //console.log('File saved.' + key)
+            console.log('**** File saved.' + key)
             count = count + 1
             //console.log(totalImageLength, count)
             if (totalImageLength <= count) {
@@ -71,6 +84,7 @@ var jsonParseProcess = function (tempPath) {
     var defer = Q.defer()
 
     defer.resolve(true)
+    //console.log("success! jsonParseProcess : ", tempPath)
     console.log("success! jsonParseProcess : ", tempPath)
 
     return defer.promise
@@ -79,7 +93,7 @@ var jsonParseProcess = function (tempPath) {
 exports.publish = function (req, res) {
 
     // 출판 처리
-    console.log(req.body)
+    //console.log(req.body)
 
     var publishType = req.body.type
     var bookName = req.body.bookName
@@ -94,7 +108,7 @@ exports.publish = function (req, res) {
             console.error(err)
         } else {
             copyResourceToTemp(tempFolder).then(function (path) {
-                console.log('[thumbnailData]', req.body)
+                //console.log('[thumbnailData]', req.body)
                 Q.all([
                     makeThumbnailImages(path, thumbnailData),
                     jsonParseProcess(path)
