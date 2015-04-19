@@ -12,6 +12,7 @@ var debug = require('debug')('publish')
 var publishTempPath = 'app/viewer/preview/'
 var bookResourcePath = 'app/viewer/resource/'
 var publicSourcePath = 'app/public/'
+var configConstant = require('../constant/config.js')
 
 var copyPublicToTemp = function (tempPath) {
     var defer = Q.defer()
@@ -80,12 +81,71 @@ var makeThumbnailImages = function (tempPath, imagesData) {
 
 }
 
-var jsonParseProcess = function (tempPath) {
+var configJsonParseProcess = function (tempPath, bookConfig) {
     var defer = Q.defer()
+    var configJsonPath = tempPath + 'json/config.json'
+    var constantBookConfig = configConstant.bookConfig
 
-    defer.resolve(true)
-    //console.log("success! jsonParseProcess : ", tempPath)
-    console.log("success! jsonParseProcess : ", tempPath)
+    //defer.resolve(true)
+    console.log("success! configJsonParseProcess : ", configJsonPath)
+
+    // TODO: Config.json read
+    fs.readJson(configJsonPath, function (err, packageObj) {
+        if (err) {
+            throw err
+        }
+        console.log('[packageObj]', packageObj)
+
+        // bookConfig default 값을 사용자가 등록한 config 정보와 합쳐서 저장
+        var mergeBookConfig = _.extend(constantBookConfig, bookConfig)
+
+        packageObj.bookConfig = mergeBookConfig
+
+        fs.writeJson(configJsonPath, packageObj, function (error) {
+            if (error) {
+                throw error
+            }
+            defer.resolve(packageObj)
+        })
+    })
+
+    return defer.promise
+}
+
+var contentsJsonParseProcess = function (tempPath) {
+    var defer = Q.defer()
+    var contentsJsonPath = tempPath + 'json/contents.json'
+    var pagesJsonPath = tempPath + 'json/pages.json'
+
+    //defer.resolve(true)
+    console.log("success! contentsJsonParseProcess : ", contentsJsonPath)
+
+    // TODO: contents.json read
+    fs.readJson(contentsJsonPath, function (err, packageObj) {
+        if (err) {
+            throw err
+        }
+        console.log('[packageObj]', packageObj)
+
+        var pagesJson = []
+
+        _.forEach(packageObj, function (data) {
+            pagesJson.push({
+                "_id": data.page,
+                "source": "public/pages/" + data.pageImage,
+                "thumbnail": "public/thumbs/" + data._id + ".png",
+                "caption": data.title
+            })
+        })
+
+
+        fs.writeJson(pagesJsonPath, pagesJson, function (error) {
+            if (error) {
+                throw error
+            }
+            defer.resolve(pagesJson)
+        })
+    })
 
     return defer.promise
 }
@@ -98,6 +158,7 @@ exports.publish = function (req, res) {
     var publishType = req.body.type
     var bookName = req.body.bookName
     var thumbnailData = req.body.thumbnail
+    var bookConfig = req.body.bookConfig
     var tempFolder = publishTempPath + _.now()
 
     // TODO: resource 나 publish
@@ -111,11 +172,12 @@ exports.publish = function (req, res) {
                 //console.log('[thumbnailData]', req.body)
                 Q.all([
                     makeThumbnailImages(path, thumbnailData),
-                    jsonParseProcess(path)
+                    configJsonParseProcess(path, bookConfig),
+                    contentsJsonParseProcess(path)
                 ]).then(function (result) {
                     res.json({
                         result: 'success',
-                        tempPath: path
+                        tempPath: tempFolder.substr(tempFolder.indexOf('app/') + 3)
                     })
                 })
             })

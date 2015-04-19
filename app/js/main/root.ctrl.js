@@ -248,7 +248,10 @@ define(function (require) {
                         }
                     })
                     console.log(pickThumbnailData)
-                    PublishService.publish(cmdType, bookTitle, pickThumbnailData)
+                    PublishService.publish(cmdType, bookTitle, pickThumbnailData).then(function (result) {
+                        console.log(result.data)
+                        window.open(result.data.tempPath)
+                    })
 
                 } else {
                     // 진행
