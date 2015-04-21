@@ -5,12 +5,10 @@
 
 var fs = require('fs')
 var _ = require('lodash')
-var Q = require('q')
 var converterList = []
 
 function checkProgress (id, res) {
-    //var defer = Q.defer()
-    // TODO: 실제 임시 폴더에 가서 총 페이지 수와 현재 만들어진 페이지 수를 비교해서 퍼센트를 낸다
+    // 실제 임시 폴더에 가서 총 페이지 수와 현재 만들어진 페이지 수를 비교해서 퍼센트를 낸다
     var findProgressConfig = _.findWhere(converterList, {id: id})
     if (findProgressConfig) {
         var tempFolder = findProgressConfig.folder
@@ -49,7 +47,6 @@ function checkProgress (id, res) {
             'message': 'not converting data'
         })
     }
-    //return defer.promise
 }
 
 exports.setConverterConfig = function (config) {
