@@ -232,36 +232,45 @@ define(function (require) {
             var currentPageNumber = 0
             var allContents
             var offCallEvent
+            var bookTitle
 
             function captureThumbnailImage () {
-                var id = allContents[currentPageNumber].id
-                console.log('[capture]', id, currentPageNumber)
-                // 없으면 캡쳐
-                if (_.isUndefined($rootScope.thumbnailBase64Data[id])) {
-                    $scope.capturing = true
-                    // page 이동 후
-                    $rootScope.commandPerformer('currentPageChange', id)
-                    $timeout(function () {
-                        // 캡쳐
-                        $rootScope.commandPerformer('thumbnailCapture', id)
-                    }, 300)
+
+                if (allContents.length <= currentPageNumber) {
+                    // 끝 - 출판 처리
+                    offCallEvent()
+                    console.log('end')
+                    // 실제 만들 page id 만 골라낸다
+                    var pickThumbnailData = {}
+                    _.forEach($rootScope.thumbnailBase64Data, function (n, key) {
+                        if (_.findWhere(allContents, {id: key})) {
+                            pickThumbnailData[key] = n
+                        }
+                    })
+                    console.log(pickThumbnailData)
+                    PublishService.publish(cmdType, bookTitle, pickThumbnailData).then(function (result) {
+                        console.log(result.data)
+                        window.open(result.data.tempPath)
+                    })
+
                 } else {
+                    // 진행
+                    var id = allContents[currentPageNumber].id
+
                     currentPageNumber = currentPageNumber + 1
-                    if (allContents.length > currentPageNumber) {
-                        captureThumbnailImage()
+
+                    console.log('[capture]', id, currentPageNumber)
+                    // 없으면 캡쳐
+                    if (_.isUndefined($rootScope.thumbnailBase64Data[id])) {
+                        $scope.capturing = true
+                        // page 이동 후
+                        $rootScope.commandPerformer('currentPageChange', id)
+                        $timeout(function () {
+                            // 캡쳐
+                            $rootScope.commandPerformer('thumbnailCapture', id)
+                        }, 1000)
                     } else {
-                        // 끝 - 출판 처리
-                        offCallEvent()
-                        console.log('end')
-                        // 실제 만들 page id 만 골라낸다
-                        var pickThumbnailData = []
-                        _.forEach($rootScope.thumbnailBase64Data, function (n, key) {
-                            if (_.findWhere(allContents, {id: key})) {
-                                pickThumbnailData[key] = n
-                            }
-                        })
-                        console.log(pickThumbnailData)
-                        // TODO: PublishService 연동 처리
+                        captureThumbnailImage()
                     }
                 }
             }
@@ -270,9 +279,8 @@ define(function (require) {
             function gleanThumbnail () {
                 // 전체 페이지에 대한 체크 및 수집
                 allContents = ContentsService.getContents()
-
                 offCallEvent = $scope.$on('thumbnailImageUpdate', function (e, params) {
-                    currentPageNumber = currentPageNumber + 1
+                    //currentPageNumber = currentPageNumber + 1
                     captureThumbnailImage()
                 })
 
@@ -285,6 +293,7 @@ define(function (require) {
                 var prompt = window.prompt('출판할 책 이름을 입력하세요.', '9Book')
                 if (prompt !== null) {
                     // thumbnail 수집 단계 진행
+                    bookTitle = prompt
                     gleanThumbnail()
                 }
             } else {

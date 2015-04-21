@@ -67,7 +67,7 @@ exports.converterPdf = function (pdfId, callback) {
             "-sDEVICE=png16m",
             "-dTextAlphaBits=4",
             "-dGraphicsAlphaBits=4",
-            "-r150",
+            "-r300",
             '-sOutputFile=' + tempFolder + fileName + '_%04d' + '.png',
             localPath + fileName + '.pdf'
         ]
@@ -85,14 +85,10 @@ exports.converterPdf = function (pdfId, callback) {
 
         gs.on('close', function( code ) {
             //console.log( 'child process exited with code ' + code )
-
             // 변환 종료 알림
-
             fs.readdir(tempFolder, function (err, files) {
                 console.log('변환 files', files)
-
                 converter.successConverter(pdfId, files)
-
                 // pages 아래로 복사
                 var totalCount = files.length
                 var moveCount = 0
@@ -111,7 +107,6 @@ exports.converterPdf = function (pdfId, callback) {
                                     throw error
                                 }
                                 // 완료
-                                //callback(files)
                                 converter.completeConverter(pdfId, files)
                             })
                         }

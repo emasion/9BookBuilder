@@ -14,6 +14,7 @@ var contents = require('./routes/contents')
 var upload = require('./routes/upload')
 var remove = require('./routes/remove')
 var converter = require('./converter/converter.js')
+var publish = require('./publish/publish.js')
 
 // config
 var serverPort = conf.port.server_dev
@@ -22,12 +23,13 @@ var fileUploadDone = false
 
 // app
 var app = express()
+    //.use(express.limit(100000000))
     .use(require('express-promise')())
-    .use(json())
-    .use(bodyParser.urlencoded())
+    //.use(json())
+    //.use(bodyParser.urlencoded({limit: '50mb'}))
     //.use(express.json())
     //.use(express.multipart())
-    .use(bodyParser.json())
+    .use(bodyParser.json({limit: '50mb'}))
     //.use(express.bodyParser())
     // cross domain
     .use(multer({
@@ -60,6 +62,7 @@ var app = express()
     .get('/contents', contents.getContents)
     .post('/converter/progress', converter.getProgress)
     .post('/contents', contents.postContents)
+    .post('/publish', publish.publish)
     .post('/upload/image', upload.uploadImage)
     .post('/upload/bgimage', upload.uploadBgImage)
     .post('/upload/video', upload.uploadVideo)

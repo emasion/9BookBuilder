@@ -18,10 +18,6 @@ function checkProgress (id, res) {
         var status = findProgressConfig.status
         if (status === 'complete') {
             // end
-            /*defer.resolve({
-                status: status,
-                percent: 100
-            })*/
             res.json({
                 'result': 'success',
                 'status': status,
@@ -36,10 +32,6 @@ function checkProgress (id, res) {
                 }
                 console.log('변환 ing length : ', files.length + ' / ' + totalPages)
                 var currentCount = files.length
-                /*defer.resolve({
-                    status: status,
-                    percent: (currentCount / totalPages) * 100
-                })*/
                 res.json({
                     'result': 'success',
                     'status': status,
@@ -56,10 +48,6 @@ function checkProgress (id, res) {
             'files': [],
             'message': 'not converting data'
         })
-        /*defer.resolve({
-            status: 'fail',
-            percent: -1
-        })*/
     }
     //return defer.promise
 }
@@ -93,26 +81,5 @@ var test = 0
 exports.getProgress = function (req, res) {
     // TODO: 현재 진행중인 변환 파일 정보를 읽어서 return 해준다
     console.log('------------- get progress params : ', req.body.id)
-    //console.log(res)
-
     checkProgress(req.body.id, res)
-
-/*    checkProgress(req.body.id).then(function (params) {
-        console.log('-------------- check progress : ', params)
-        res.json({
-            'result': 'success',
-            'status': params.status,
-            'progress': params.progress,
-            'files': params.files,
-            'message': progress === -1 ? 'not progressing converter' : 'progressing'
-        })
-    })*/
-
-    /*res.json({
-        'result': 'success',
-        'status': 'converting',
-        'progress': test++,
-        'files': [],
-        'message': 'progressing'
-    })*/
 }

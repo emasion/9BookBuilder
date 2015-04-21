@@ -50,5 +50,5 @@ var config = {
     }
 }
 
-console.info(config)
+//console.info(config)
 module.exports = config
