@@ -203,6 +203,12 @@ define(function (require) {
                         })
                     }
 
+                    // page container zoom 변경 핸들러
+                    function changeZoomHandler (e, zoomValue) {
+                        // TODO: 전체 컴포넌트 사이즈를 zoomValue 를 곱한 값으로 표현
+                        //$element.css('zoom', zoomValue)
+                    }
+
                     // 실제 page-component 에 변경 이미지 적용
                     function changeBgImage (imageName) {
                         console.log(imageName)
@@ -249,6 +255,7 @@ define(function (require) {
                     $rootScope.$on('addComponent', addComponentHandler)
                     $rootScope.$on('deleteComponent', deleteComponentHandler)
                     $rootScope.$on('changeBgImage', changeBgImageHandler)
+                    $rootScope.$on('changeZoom', changeZoomHandler)
                     $rootScope.$on('thumbnailCapture', thumbnailCaptureHandler)
 
                     // pageContents watch

@@ -75,6 +75,31 @@ define(function (require) {
                 },
                 onComplete: function (e) {}
             }
+
+            // zoom slider
+            $scope.zoomSlider = 100 // default 값
+
+            $scope.zoomBtnClick = function (target) {
+                var newZoomValue
+
+                if (target === 'window') {
+                    // 창 사이즈에 zoom 맞춤
+                    // TODO: 창 사이즈에 비례한 zoom value 만들기
+                    newZoomValue = 300
+                } else {
+                    // 원본 사이즈로 나오게 zoom 맞춤 - 100% 로 하면 되고
+                    newZoomValue = 100
+                }
+
+                $scope.zoomSlider = newZoomValue
+            }
+
+            $scope.$watch('zoomSlider', function (zoomValue) {
+                // zoom 변동에 따른 실제 화면 적용 처리
+                console.log(zoomValue)
+                // add component 호출 - TODO: 각 컴포넌트에서 visual 로 zoomValue 를 곱해서 처리 해야함
+                $rootScope.commandPerformer('changeZoom', (zoomValue / 100).toFixed(2))
+            })
         }
 
         init()

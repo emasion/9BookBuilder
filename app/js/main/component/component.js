@@ -11,13 +11,14 @@ define(function (require) {
             this.id = id
             this.options = options
             this._attr = []
+            this.visualZoom = 1
             this.render()
             this.addEvent()
         }
 
         Component.prototype.render = function () {
-            // TODO: SELECT AREA 생성
-            // TODO: click event handler
+            // SELECT AREA 생성
+            // click event handler
 
             var self = this
             var selectArea = $('<div/>').addClass('component-select-area')

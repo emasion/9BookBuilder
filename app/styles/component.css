@@ -5,7 +5,7 @@
 .control-view-menu {
     position: fixed;
     cursor: pointer;
-    opacity: .7;
+    opacity: .5;
     z-index: 1;
     display: flex;
     margin-top: 5px;
@@ -17,8 +17,43 @@
     margin: 0 2px;
 }
 
-.control-view-menu .options-button:hover, .control-view-menu .options-button:active {
+.control-view-menu:hover {
     opacity: 1;
+}
+
+.control-zoom-menu {
+    position: fixed;
+    z-index: 1;
+    display: flex;
+    margin-top: 5px;
+    right: 280px;
+    background-color: rgb(250, 234, 123);
+    padding: 2px;
+    border-radius: 3px;
+    opacity: .5;
+}
+
+.control-zoom-menu:hover {
+    opacity: 1;
+}
+
+.control-zoom-menu .zoom-input {
+    width: 40px;
+    margin-left: 8px;
+    border: 1px solid #B4AC63;
+    border-radius: 3px;
+    color: rgb(33, 42, 51);
+}
+
+.control-zoom-menu .zoom-button {
+    cursor: pointer;
+    margin-right: 3px;
+    padding: 0px;
+    width: 26px;
+}
+
+.control-zoom-menu .k-slider-selection {
+    display: none;
 }
 
 span.context-menu-label {
