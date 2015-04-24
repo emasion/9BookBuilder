@@ -425,28 +425,28 @@ define(function (require) {
                                     },
                                     onDrag: function (x, y) {
                                         //console.log('[drag]', x, y)
-                                        x = parseInt(x / $rootScope.pageZoomValue)
-                                        y = parseInt(y / $rootScope.pageZoomValue)
+                                        //x = parseInt(x / $rootScope.pageZoomValue)
+                                        //y = parseInt(y / $rootScope.pageZoomValue)
                                         //console.log('[drag change]', x, y)
-                                        return [x, y]
+                                        //return [x, y]
                                         // TODO: drag handler
                                     },
                                     onDragStart: function (x, y) {
 
-                                        x = parseInt(x * $rootScope.pageZoomValue)
-                                        y = parseInt(y * $rootScope.pageZoomValue)
+                                        //x = parseInt(x * $rootScope.pageZoomValue)
+                                        //y = parseInt(y * $rootScope.pageZoomValue)
                                         //console.log('[dragStart change]', x, y)
 
-                                        return [x, y]
+                                        //return [x, y]
                                     },
                                     //onDragStop: mouseActionStopComponent
                                     onDragStop: function (x, y) {
                                         mouseActionStopComponent(this)
 
-                                        x = parseInt(x / $rootScope.pageZoomValue)
-                                        y = parseInt(y / $rootScope.pageZoomValue)
+                                        //x = parseInt(x / $rootScope.pageZoomValue)
+                                        //y = parseInt(y / $rootScope.pageZoomValue)
 
-                                        return [x, y]
+                                        //return [x, y]
                                     }
                                 }
                             )

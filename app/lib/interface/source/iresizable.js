@@ -26,8 +26,10 @@ jQuery.iResize = {
 		jQuery.iResize.dragged = (this.dragEl) ? this.dragEl: this;
 		jQuery.iResize.pointer = jQuery.iUtil.getPointer(e);
 
-		var top = parseInt(jQuery(jQuery.iResize.dragged).css('top')) || 0;
-		var left = parseInt(jQuery(jQuery.iResize.dragged).css('left')) || 0;
+		var zoomValue = jQuery.iResize.dragged.resizeOptions.zoomValue
+
+		var top = parseInt(parseInt(jQuery(jQuery.iResize.dragged).css('top')) * zoomValue) || 0;
+		var left = parseInt(parseInt(jQuery(jQuery.iResize.dragged).css('left')) * zoomValue) || 0;
 		var width = parseInt(jQuery(jQuery.iResize.dragged).css('width')) || 0;
 		var height = parseInt(jQuery(jQuery.iResize.dragged).css('height')) || 0;
 
@@ -42,8 +44,6 @@ jQuery.iResize = {
 			if (Object.prototype.toString.call(newPos) == '[object Array]' && newPos.length == 2) {
 				left = newPos[0];
 				top = newPos[1];
-				//width = newPos[2];
-				//height = newPos[3];
 			}
 		}
 
@@ -72,6 +72,8 @@ jQuery.iResize = {
 			.unbind('mousemove', jQuery.iResize.moveDrag)
 			.unbind('mouseup', jQuery.iResize.stopDrag);
 
+		var zoomValue = jQuery.iResize.dragged.resizeOptions.zoomValue
+
 		// Callback?
 		if (typeof jQuery.iResize.dragged.resizeOptions.onDragStop === 'function') {
 			//jQuery.iResize.pointer = jQuery.iUtil.getPointer(e)
@@ -81,14 +83,17 @@ jQuery.iResize = {
 					top: newPos[1],
 					left: newPos[0]
 				}
-				jQuery.iResize.sizes = {
-					width: parseInt(jQuery(this.resizeElement).css('width'))||0,
-					height: parseInt(jQuery(this.resizeElement).css('height'))||0
+			} else {
+				jQuery.iResize.position = {
+					top: parseInt(jQuery.iResize.dragged.style.top / zoomValue),
+					left: parseInt(jQuery.iResize.dragged.style.left / zoomValue)
 				}
-				//jQuery.iResize.dragged.style.top = newPos[1] + 'px';
-				//jQuery.iResize.dragged.style.left = newPos[0] + 'px';
 			}
+		}
 
+		jQuery.iResize.sizes = {
+			width: parseInt(jQuery(this.resizeElement).css('width'))||0,
+			height: parseInt(jQuery(this.resizeElement).css('height'))||0
 		}
 
 		// Remove dragged element
@@ -104,15 +109,18 @@ jQuery.iResize = {
 
 		pointer = jQuery.iUtil.getPointer(e);
 
+		var zoomValue = jQuery.iResize.dragged.resizeOptions.zoomValue
+
 		// Calculate new positions
-		newTop = jQuery.iResize.position.top - jQuery.iResize.pointer.y + pointer.y;
-		newLeft = jQuery.iResize.position.left - jQuery.iResize.pointer.x + pointer.x;
+		newTop = parseInt((jQuery.iResize.position.top - jQuery.iResize.pointer.y + pointer.y) / zoomValue);
+		newLeft = parseInt((jQuery.iResize.position.left - jQuery.iResize.pointer.x + pointer.x) / zoomValue);
+		console.log(jQuery.iResize.position.left, jQuery.iResize.pointer.x, pointer.x)
 		newTop = Math.max(
 						Math.min(newTop, jQuery.iResize.dragged.resizeOptions.maxBottom - jQuery.iResize.sizes.height),
 						jQuery.iResize.dragged.resizeOptions.minTop
 					);
 		newLeft = Math.max(
-						Math.min(newLeft, jQuery.iResize.dragged.resizeOptions.maxRight- jQuery.iResize.sizes.width),
+						Math.min(newLeft, jQuery.iResize.dragged.resizeOptions.maxRight - jQuery.iResize.sizes.width),
 						jQuery.iResize.dragged.resizeOptions.minLeft
 					);
 
@@ -123,14 +131,11 @@ jQuery.iResize = {
 				newLeft = newPos[0];
 				newTop = newPos[1];
 			}*/
-			if (Object.prototype.toString.call(newPos) == '[object Array]' && newPos.length == 2) {
+			/*if (Object.prototype.toString.call(newPos) == '[object Array]' && newPos.length == 2) {
 				newLeft = newPos[0];
 				newTop = newPos[1];
-			}
-
+			}*/
 		}
-
-		console.log('left:', newLeft)
 
 		// Update the element
 		jQuery.iResize.dragged.style.top = newTop + 'px';
