@@ -23,6 +23,7 @@ define(function (require) {
                 $scope.pageImageUrl
 
                 var $ = angular.element
+                var self = this
 
                 var zIndexListComponent = []
 
@@ -206,7 +207,18 @@ define(function (require) {
                     // page container zoom 변경 핸들러
                     function changeZoomHandler (e, zoomValue) {
                         // TODO: 전체 컴포넌트 사이즈를 zoomValue 를 곱한 값으로 표현
-                        //$element.css('zoom', zoomValue)
+                        $element.css('zoom', zoomValue)
+
+                        /*$element.css({
+                            width: $scope.pageWidth * $rootScope.pageZoomValue,
+                            height: $scope.pageHeight * $rootScope.pageZoomValue,
+                        })*/
+
+                        // resize max 사이즈 변경
+
+                        resizeHandler()
+
+                        //debugger
                     }
 
                     // 실제 page-component 에 변경 이미지 적용
@@ -268,6 +280,11 @@ define(function (require) {
                     $scope.$watch('pageImage', function (newPageImage) {
                         changeBgImage(newPageImage)
                     })
+
+                    $(window).on('resize', _.debounce(resizeHandler, 200))
+                    _.delay(function () {
+                        resizeHandler()
+                    }, 500)
 
                     // test - html2canvas test
                     /*$rootScope.$on('changeComponent', function () {
@@ -376,15 +393,16 @@ define(function (require) {
                         function resizableInit () {
                             $(element).Resizable(
                                 {
-                                    minWidth: parseInt(configLayout.component.minWidth, 0),
-                                    minHeight: parseInt(configLayout.component.minHeight, 0),
-                                    maxWidth: parseInt(configLayout.component.maxWidth, 0),
-                                    maxHeight: parseInt(configLayout.component.maxHeight, 0),
+                                    minWidth: parseInt(configLayout.component.minWidth),
+                                    minHeight: parseInt(configLayout.component.minHeight),
+                                    maxWidth: parseInt(configLayout.component.maxWidth),
+                                    maxHeight: parseInt(configLayout.component.maxHeight),
                                     minTop: 0.1,
                                     minLeft: 0.1,
-                                    maxRight: parseInt($scope.pageWidth, 0),
-                                    maxBottom: parseInt($scope.pageHeight, 0),
+                                    maxRight: $scope.pageWidth,
+                                    maxBottom: $scope.pageHeight,
                                     dragHandle: true,
+                                    zoomValue: $rootScope.pageZoomValue,
                                     handlers: {
                                         se: handlerIds.se,
                                         e: handlerIds.e,
@@ -397,21 +415,39 @@ define(function (require) {
                                     },
                                     onResize: function(size, position) {
                                         // TODO: resize handler
-                                        //console.log('[resize]', size, position)
+                                        console.log('[resize]', size, position)
                                     },
                                     onStart: function () {
                                         // TODO: resize start handler
                                     },
-                                    onStop: mouseActionStopComponent,
+                                    onStop: function () {
+                                        mouseActionStopComponent(this)
+                                    },
                                     onDrag: function (x, y) {
                                         //console.log('[drag]', x, y)
+                                        x = parseInt(x / $rootScope.pageZoomValue)
+                                        y = parseInt(y / $rootScope.pageZoomValue)
+                                        //console.log('[drag change]', x, y)
+                                        return [x, y]
                                         // TODO: drag handler
                                     },
-                                    onDragStart: function () {
-                                        // TODO: drag start handler  z-index up
-                                        //console.log(this)
+                                    onDragStart: function (x, y) {
+
+                                        x = parseInt(x * $rootScope.pageZoomValue)
+                                        y = parseInt(y * $rootScope.pageZoomValue)
+                                        //console.log('[dragStart change]', x, y)
+
+                                        return [x, y]
                                     },
-                                    onDragStop: mouseActionStopComponent
+                                    //onDragStop: mouseActionStopComponent
+                                    onDragStop: function (x, y) {
+                                        mouseActionStopComponent(this)
+
+                                        x = parseInt(x / $rootScope.pageZoomValue)
+                                        y = parseInt(y / $rootScope.pageZoomValue)
+
+                                        return [x, y]
+                                    }
                                 }
                             )
                         }
@@ -426,19 +462,29 @@ define(function (require) {
                     })
                 }
 
-                var mouseActionStopComponent = function () {
+                var mouseActionStopComponent = function (target) {
                     $rootScope.commandPerformer('changeComponent', {
-                        id: this.id,
+                        id: target.id,
                         position: {
-                            x: parseInt($(this).css('left'), 0),
-                            y: parseInt($(this).css('top'), 0),
-                            z: parseInt($(this).css('z-index'), 0)
+                            x: parseInt($(target).css('left'), 0),
+                            y: parseInt($(target).css('top'), 0),
+                            z: parseInt($(target).css('z-index'), 0)
                         },
                         size: {
-                            width: parseInt($(this).css('width'), 0),
-                            height: parseInt($(this).css('height'), 0)
+                            width: parseInt($(target).css('width'), 0),
+                            height: parseInt($(target).css('height'), 0)
                         }
                     })
+                }
+
+                var resizeHandler = function () {
+                    var marginTop
+                    if ($element.parents('.k-pane').height() > ($element.height() * $rootScope.pageZoomValue)) {
+                        marginTop = ($element.parents('.k-pane').height() - ($element.height() * $rootScope.pageZoomValue)) / 2
+                    } else {
+                        marginTop = 0
+                    }
+                    TweenLite.to($element, 0.3, {marginTop: marginTop, ease: Back.easeOut})
                 }
 
                 // 각각의 options 정보를 contents component 에서 가져가기 위한 메소드
@@ -455,7 +501,7 @@ define(function (require) {
             },
 
             link: function (scope, element) {
-                var resizeHandler = function () {
+                /*var resizeHandler = function () {
                     var marginTop
                     if (element.parents('.k-pane').height() > element.height()) {
                         marginTop = (element.parents('.k-pane').height() - element.height()) / 2
@@ -467,7 +513,7 @@ define(function (require) {
                 $(window).on('resize', _.debounce(resizeHandler, 200))
                 _.delay(function () {
                     resizeHandler()
-                }, 500)
+                }, 500)*/
             }
         }
     }

@@ -22,30 +22,45 @@ jQuery.iResize = {
 	 * internal: Start function
 	 */
 	startDrag: function(e) {
+
 		jQuery.iResize.dragged = (this.dragEl) ? this.dragEl: this;
 		jQuery.iResize.pointer = jQuery.iUtil.getPointer(e);
 
-		// Save original size
-		jQuery.iResize.sizes = {
-			width: parseInt(jQuery(jQuery.iResize.dragged).css('width')) || 0,
-			height: parseInt(jQuery(jQuery.iResize.dragged).css('height')) || 0
-		};
-
-		// Save original position
-		jQuery.iResize.position = {
-			top: parseInt(jQuery(jQuery.iResize.dragged).css('top')) || 0,
-			left: parseInt(jQuery(jQuery.iResize.dragged).css('left')) || 0
-		};
+		var top = parseInt(jQuery(jQuery.iResize.dragged).css('top')) || 0;
+		var left = parseInt(jQuery(jQuery.iResize.dragged).css('left')) || 0;
+		var width = parseInt(jQuery(jQuery.iResize.dragged).css('width')) || 0;
+		var height = parseInt(jQuery(jQuery.iResize.dragged).css('height')) || 0;
 
 		// Assign event handlers
 		jQuery(document)
 			.bind('mousemove', jQuery.iResize.moveDrag)
 			.bind('mouseup', jQuery.iResize.stopDrag);
 
-		// Callback?
+		// Callback
 		if (typeof jQuery.iResize.dragged.resizeOptions.onDragStart === 'function') {
-			jQuery.iResize.dragged.resizeOptions.onDragStart.apply(jQuery.iResize.dragged);
+			var newPos = jQuery.iResize.dragged.resizeOptions.onDragStart.apply(jQuery.iResize.dragged, [left, top]);
+			if (Object.prototype.toString.call(newPos) == '[object Array]' && newPos.length == 2) {
+				left = newPos[0];
+				top = newPos[1];
+				//width = newPos[2];
+				//height = newPos[3];
+			}
 		}
+
+
+		// Save original size
+		jQuery.iResize.sizes = {
+			width: width,
+			height: height
+		};
+
+		// Save original position
+		jQuery.iResize.position = {
+			top: top,
+			left: left
+		};
+
+
 		return false;
 	},
 	/**
@@ -59,7 +74,21 @@ jQuery.iResize = {
 
 		// Callback?
 		if (typeof jQuery.iResize.dragged.resizeOptions.onDragStop === 'function') {
-			jQuery.iResize.dragged.resizeOptions.onDragStop.apply(jQuery.iResize.dragged);
+			//jQuery.iResize.pointer = jQuery.iUtil.getPointer(e)
+			var newPos = jQuery.iResize.dragged.resizeOptions.onDragStop.apply(jQuery.iResize.dragged, [jQuery.iResize.dragged.style.left, jQuery.iResize.dragged.style.top]);
+			if (Object.prototype.toString.call(newPos) == '[object Array]' && newPos.length == 2) {
+				jQuery.iResize.position = {
+					top: newPos[1],
+					left: newPos[0]
+				}
+				jQuery.iResize.sizes = {
+					width: parseInt(jQuery(this.resizeElement).css('width'))||0,
+					height: parseInt(jQuery(this.resizeElement).css('height'))||0
+				}
+				//jQuery.iResize.dragged.style.top = newPos[1] + 'px';
+				//jQuery.iResize.dragged.style.left = newPos[0] + 'px';
+			}
+
 		}
 
 		// Remove dragged element
@@ -90,11 +119,18 @@ jQuery.iResize = {
 		// Callback
 		if (typeof jQuery.iResize.dragged.resizeOptions.onDrag === 'function') {
 			var newPos = jQuery.iResize.dragged.resizeOptions.onDrag.apply(jQuery.iResize.dragged, [newLeft, newTop]);
-			if (typeof newPos == 'array' && newPos.length == 2) {
+			/*if (typeof newPos == 'array' && newPos.length == 2) {
+				newLeft = newPos[0];
+				newTop = newPos[1];
+			}*/
+			if (Object.prototype.toString.call(newPos) == '[object Array]' && newPos.length == 2) {
 				newLeft = newPos[0];
 				newTop = newPos[1];
 			}
+
 		}
+
+		console.log('left:', newLeft)
 
 		// Update the element
 		jQuery.iResize.dragged.style.top = newTop + 'px';
@@ -329,6 +365,7 @@ jQuery.iResize = {
 			function() {
 				var el = this;
 				el.resizeOptions = options;
+				el.resizeOptions.zoomValue = options.zoomValue || 1;
 				el.resizeOptions.minWidth = options.minWidth || 10;
 				el.resizeOptions.minHeight = options.minHeight || 10;
 				el.resizeOptions.maxWidth = options.maxWidth || 3000;
@@ -337,6 +374,8 @@ jQuery.iResize = {
 				el.resizeOptions.minLeft = options.minLeft || -1000;
 				el.resizeOptions.maxRight = options.maxRight || 3000;
 				el.resizeOptions.maxBottom = options.maxBottom || 3000;
+
+
 				elPosition = jQuery(el).css('position');
 				if (!(elPosition == 'relative' || elPosition == 'absolute')) {
 					el.style.position = 'relative';

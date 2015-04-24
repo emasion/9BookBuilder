@@ -11,6 +11,7 @@ define(function (require) {
 
         $rootScope.currentPageId
         $rootScope.selectComponent
+        $rootScope.pageZoomValue = 1
         $rootScope.thumbnailBase64Data = {}
 
         $rootScope.linkHandler = function (linkUrl) {
@@ -28,6 +29,9 @@ define(function (require) {
             if (command === 'thumbnailImageUpdate') {
                 $rootScope.thumbnailBase64Data[params.id] = params.imgBase64
                 //console.log('[thumbnailBase64Data]', $rootScope.thumbnailBase64Data)
+            }
+            if (command === 'changeZoom') {
+                $rootScope.pageZoomValue = parseFloat(params)
             }
             if (command === 'previewBook' || command === 'publishBook') {
                 $scope.publishHandler(command)
