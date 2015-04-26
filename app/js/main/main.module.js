@@ -35,7 +35,18 @@ define(function (require) {
                 views: {
                     '': { controller: 'RootController as rootCtrl' },
                     'main.menu': { controller: 'MainMenuController as mainMenuCtrl' },
-                    'main.container': { controller: 'MainContainerController as mainContainerCtrl' },
+                    'main.container': {
+                        controller: 'MainContainerController as mainContainerCtrl',
+                        resolve: {
+                            configLayoutData: function ($q, ConfigService) {
+                                var defer = $q.defer()
+                                ConfigService.getConfigData().then(function (result) {
+                                    defer.resolve(result.layout)
+                                })
+                                return defer.promise
+                            }
+                        }
+                    },
                     'main.copyright': { controller: 'MainCopyrightController as mainCopyrightCtrl' }
                 }
             })

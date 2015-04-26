@@ -149,13 +149,15 @@ jQuery.iResize = {
 			.bind('mousemove', jQuery.iResize.move)
 			.bind('mouseup', jQuery.iResize.stop);
 
+		var zoomValue = this.resizeElement.resizeOptions.zoomValue || 1
+
 		// Initialize resizable
 		jQuery.iResize.resizeElement = this.resizeElement;
 		jQuery.iResize.resizeDirection = this.resizeDirection;
 		jQuery.iResize.pointer = jQuery.iUtil.getPointer(e);
 		jQuery.iResize.sizes = {
-				width: parseInt(jQuery(this.resizeElement).css('width'))||0,
-				height: parseInt(jQuery(this.resizeElement).css('height'))||0
+				width: parseInt(jQuery(this.resizeElement).css('width')) ||0,
+				height: parseInt(jQuery(this.resizeElement).css('height')) ||0
 			};
 		jQuery.iResize.position = {
 				top: parseInt(jQuery(this.resizeElement).css('top'))||0,
@@ -167,6 +169,8 @@ jQuery.iResize = {
 			jQuery.iResize.resizeElement.resizeOptions.onStart.apply(jQuery.iResize.resizeElement, [this]);
 		}
 
+		console.log('$$$$ start:', jQuery.iResize.sizes.width, jQuery.iResize.sizes.height)
+
 		return false;
 	},
 	stop: function() {
@@ -175,10 +179,19 @@ jQuery.iResize = {
 			.unbind('mousemove', jQuery.iResize.move)
 			.unbind('mouseup', jQuery.iResize.stop);
 
+		var zoomValue = jQuery.iResize.resizeElement.resizeOptions.zoomValue || 1
+
 		// Callback function
 		if (jQuery.iResize.resizeElement.resizeOptions.onStop) {
 			jQuery.iResize.resizeElement.resizeOptions.onStop.apply(jQuery.iResize.resizeElement, [jQuery.iResize.resizeDirection]);
 		}
+
+		/*jQuery.iResize.sizes = {
+			width: parseInt(parseInt(jQuery(this.resizeElement).css('width')) / zoomValue) ||0,
+			height: parseInt(parseInt(jQuery(this.resizeElement).css('height')) / zoomValue) ||0
+		}*/
+
+		console.log('$$$$ stop:', jQuery.iResize.sizes.width, jQuery.iResize.sizes.height)
 
 		// Unbind
 		jQuery.iResize.resizeElement = null;
@@ -207,6 +220,10 @@ jQuery.iResize = {
 			return;
 		}
 
+		var zoomValue = jQuery.iResize.resizeElement.resizeOptions.zoomValue || 1
+
+		// 늘어나고 줄어드는 만큼에 대한 값에 대해서만 zoomValue를 적용하면 된다.
+
 		pointer = jQuery.iUtil.getPointer(e);
 		dx = pointer.x - jQuery.iResize.pointer.x;
 		dy = pointer.y - jQuery.iResize.pointer.y;
@@ -222,38 +239,38 @@ jQuery.iResize = {
 
 		switch (jQuery.iResize.resizeDirection){
 			case 'e':
-				newSizes.width = jQuery.iResize.getWidth(dx,1);
+				newSizes.width = jQuery.iResize.getWidth(dx, 1);
 				break;
 			case 'se':
-				newSizes.width = jQuery.iResize.getWidth(dx,1);
-				newSizes.height = jQuery.iResize.getHeight(dy,1);
+				newSizes.width = jQuery.iResize.getWidth(dx, 1);
+				newSizes.height = jQuery.iResize.getHeight(dy, 1);
 				break;
 			case 'w':
-				newSizes.width = jQuery.iResize.getWidth(dx,-1);
+				newSizes.width = jQuery.iResize.getWidth(dx, -1);
 				newPosition.left = jQuery.iResize.position.left - newSizes.width + jQuery.iResize.sizes.width;
 				break;
 			case 'sw':
-				newSizes.width = jQuery.iResize.getWidth(dx,-1);
+				newSizes.width = jQuery.iResize.getWidth(dx, -1);
 				newPosition.left = jQuery.iResize.position.left - newSizes.width + jQuery.iResize.sizes.width;
-				newSizes.height = jQuery.iResize.getHeight(dy,1);
+				newSizes.height = jQuery.iResize.getHeight(dy, 1);
 				break;
 			case 'nw':
-				newSizes.height = jQuery.iResize.getHeight(dy,-1);
+				newSizes.height = jQuery.iResize.getHeight(dy, -1);
 				newPosition.top = jQuery.iResize.position.top - newSizes.height + jQuery.iResize.sizes.height;
-				newSizes.width = jQuery.iResize.getWidth(dx,-1);
+				newSizes.width = jQuery.iResize.getWidth(dx, -1);
 				newPosition.left = jQuery.iResize.position.left - newSizes.width + jQuery.iResize.sizes.width;
 				break;
 			case 'n':
-				newSizes.height = jQuery.iResize.getHeight(dy,-1);
+				newSizes.height = jQuery.iResize.getHeight(dy, -1);
 				newPosition.top = jQuery.iResize.position.top - newSizes.height + jQuery.iResize.sizes.height;
 				break;
 			case 'ne':
-				newSizes.height = jQuery.iResize.getHeight(dy,-1);
+				newSizes.height = jQuery.iResize.getHeight(dy, -1);
 				newPosition.top = jQuery.iResize.position.top - newSizes.height + jQuery.iResize.sizes.height;
-				newSizes.width = jQuery.iResize.getWidth(dx,1);
+				newSizes.width = jQuery.iResize.getWidth(dx, 1);
 				break;
 			case 's':
-				newSizes.height = jQuery.iResize.getHeight(dy,1);
+				newSizes.height = jQuery.iResize.getHeight(dy, 1);
 				break;
 		}
 
@@ -356,6 +373,8 @@ jQuery.iResize = {
 			elS.width = newSizes.width + 'px';
 			elS.height = newSizes.height + 'px';
 
+		console.log('$$$$ move:', elS.width, elS.height)
+
 		return false;
 	},
 	/**
@@ -379,6 +398,12 @@ jQuery.iResize = {
 				el.resizeOptions.minLeft = options.minLeft || -1000;
 				el.resizeOptions.maxRight = options.maxRight || 3000;
 				el.resizeOptions.maxBottom = options.maxBottom || 3000;
+
+				// zoom change event handler
+				jQuery(el).on('zoomChange', function (e) {
+					console.log(parseFloat(e.zoomValue))
+					el.resizeOptions.zoomValue = parseFloat(e.zoomValue)
+				})
 
 
 				elPosition = jQuery(el).css('position');

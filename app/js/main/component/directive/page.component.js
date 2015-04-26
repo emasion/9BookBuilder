@@ -209,6 +209,10 @@ define(function (require) {
                         // TODO: 전체 컴포넌트 사이즈를 zoomValue 를 곱한 값으로 표현
                         $element.css('zoom', zoomValue)
 
+                        var event = $.Event( 'zoomChange' )
+                        event.zoomValue = zoomValue
+                        $element.children().trigger(event)
+
                         /*$element.css({
                             width: $scope.pageWidth * $rootScope.pageZoomValue,
                             height: $scope.pageHeight * $rootScope.pageZoomValue,
@@ -415,7 +419,7 @@ define(function (require) {
                                     },
                                     onResize: function(size, position) {
                                         // TODO: resize handler
-                                        console.log('[resize]', size, position)
+                                        //console.log('[resize]', size, position)
                                     },
                                     onStart: function () {
                                         // TODO: resize start handler

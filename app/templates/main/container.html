@@ -1,5 +1,6 @@
 <div kendo-splitter
      class="main-container-splitter"
+     k-on-resize="mainContainerResize(kendoEvent)"
      k-panes="[ { size: '200px', max: '400px' }, null, { size: '260px', max: '400px' } ]">
     <div>
         <div class="container-view sortable-view" ui-view="container.sortable"></div>
@@ -14,13 +15,13 @@
             <button ng-click="zoomBtnClick('origin')" class="k-button zoom-button" title="원본 사이즈 맞춤"><i class="fa fa-arrows-v"></i></button>
             <div kendo-slider
                  ng-model="zoomSlider"
-                 k-max="500"
-                 k-min="50"
+                 k-max="zoom.max"
+                 k-min="zoom.min"
                  k-show-buttons="false"
                  k-tick-placement="none"
                  k-tooltip="{ enabled: false }"
                  style="width: 80px; margin-left: 8px;"></div>
-            <input type="number" min="50" max="500" ng-value="zoomSlider" class="zoom-input" ng-model="zoomSlider" />
+            <input type="number" min="{{zoom.min}}" max="{{zoom.max}}" ng-value="zoomSlider" class="zoom-input" ng-model="zoomSlider" />
         </div>
         <div class="container-view" ui-view="container.controlview"></div>
     </div>

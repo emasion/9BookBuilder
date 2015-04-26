@@ -306,6 +306,13 @@ define(function (require) {
             }
         }
 
+        // zoomBoxPositionChange
+        $rootScope.zoomBoxPositionChange = function () {
+            $('.control-zoom-menu').css({
+                right: $('.container-view[ui-view="container.property"]').width() + 30
+            })
+        }
+
         // global key event bind
         $rootScope.pressingKeyCode
         $(document).ready(function() {

@@ -4,8 +4,9 @@ define(function (require) {
     'use strict'
 
     // @njInject
-    return function MainContainerController ($rootScope, $scope, $timeout, format, ContentsService) {
+    return function MainContainerController ($rootScope, $scope, $timeout, format, ContentsService, ConfigService, configLayoutData) {
         console.info('MainContainerController')
+        var $ = angular.element
         var contentsChangeHandler = function (e, pageContents) {
             if (pageContents) {
                 // server 에 현재 변경된 PAGE의 contents 를 저장한다.
@@ -77,7 +78,11 @@ define(function (require) {
             }
 
             // zoom slider
-            $scope.zoomSlider = 100 // default 값
+            $scope.zoomSlider = configLayoutData.zoomDefault // default 값
+            $scope.zoom = {
+                min: configLayoutData.zoomMin,
+                max: configLayoutData.zoomMax
+            }
 
             $scope.zoomBtnClick = function (target) {
                 var newZoomValue
@@ -85,21 +90,92 @@ define(function (require) {
                 if (target === 'window') {
                     // 창 사이즈에 zoom 맞춤
                     // TODO: 창 사이즈에 비례한 zoom value 만들기
-                    newZoomValue = 300
+                    //newZoomValue = 150
+
+                    var bookSizeRadio = 0.95
+                    var boxWidth = $('.view-pattern').width()
+                    var boxHeight = $('.view-pattern').height()
+                    var pageWidth = $('#pageComponent').width()
+                    var pageHeight = $('#pageComponent').height()
+                    var width, height
+
+                    //book 너비 높이가 모두 컨테이너 너비 높이보다 작은 경우
+                    if (boxWidth > pageWidth && boxHeight > pageHeight) {
+                        if ((boxWidth - pageWidth) / 2 > (boxHeight - pageHeight) / 2) {
+                            //세로가 좁다 - 세로에 sizeRatio적용
+                            //console.log('세로가 좁다 - 세로에 sizeRatio적용')
+                            height = boxHeight * bookSizeRadio
+                            width = (height * pageWidth) / pageHeight
+                        } else {
+                            //가로가 좁다 - 가로에 sizeRatio적용
+                            //console.log('가로가 좁다 - 가로에 sizeRatio적용')
+                            width = boxWidth * bookSizeRadio
+                            height = (width * boxHeight) / boxWidth
+                        }
+                    } else {
+                        var nTempWidth = boxWidth / pageWidth
+                        var nTempHeight = boxHeight / pageHeight
+
+                        //너비 ,높이 비율값 가운데 큰 값이 기준
+                        if (nTempWidth > nTempHeight) {
+                            //기준값을 높이로
+                            //console.log('기준값을 높이로')
+                            height = boxHeight * bookSizeRadio
+                            width = (height * pageWidth) / pageHeight
+                            if (width > boxWidth * bookSizeRadio) { //넘어가면
+                                width = boxWidth * bookSizeRadio
+                                height = (width * pageHeight) / pageWidth
+                            }
+                        } else {
+                            //기준값을 너비로
+                            //console.log('기준값을 너비로')
+                            width = boxWidth * bookSizeRadio
+                            height = (width * pageHeight) / pageWidth;
+                            if (height > boxHeight * bookSizeRadio) { //넘어가면
+                                height = boxHeight * bookSizeRadio
+                                width = (height * pageWidth) / pageHeight
+                            }
+                        }
+                    }
+
+                    // 비율 구하기
+                    newZoomValue = parseInt(width / pageWidth * 100)
+
+                    console.log(width, height, newZoomValue)
                 } else {
                     // 원본 사이즈로 나오게 zoom 맞춤 - 100% 로 하면 되고
                     newZoomValue = 100
                 }
 
                 $scope.zoomSlider = newZoomValue
+                $timeout(function () {
+                    $scope.$apply()
+                })
+                //$rootScope.commandPerformer('changeZoom', (newZoomValue / 100).toFixed(2))
+            }
+
+            $scope.mainContainerResize = function (event) {
+                $rootScope.zoomBoxPositionChange()
             }
 
             $scope.$watch('zoomSlider', function (zoomValue) {
                 // zoom 변동에 따른 실제 화면 적용 처리
                 console.log(zoomValue)
-                // add component 호출 - TODO: 각 컴포넌트에서 visual 로 zoomValue 를 곱해서 처리 해야함
+                // add component 호출
                 $rootScope.commandPerformer('changeZoom', (zoomValue / 100).toFixed(2))
             })
+
+            var resizeHandler = function () {
+                // zoom value 조절
+                $scope.zoomBtnClick('window')
+                // control-zoom-menu right 위치값 변경
+                $rootScope.zoomBoxPositionChange()
+            }
+
+            $(window).on('resize', _.debounce(resizeHandler, 200))
+            _.delay(function () {
+                resizeHandler()
+            }, 500)
         }
 
         init()
