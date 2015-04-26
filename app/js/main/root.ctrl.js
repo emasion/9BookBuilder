@@ -216,9 +216,6 @@ define(function (require) {
         $scope.openLoadingPopup = false
         $scope.loadingTitle
         $rootScope.loadingProgressModal = function (cmd, title) {
-            if ($scope.openLoadingPopup) {
-                return
-            }
             if (cmd === 'start' && !$scope.openLoadingPopup) {
                 $scope.loadingPop.open().center()
                 $scope.openLoadingPopup = true
@@ -226,7 +223,7 @@ define(function (require) {
                 $scope.loadingPop.close()
                 $scope.openLoadingPopup = false
             }
-            $scope.loadingTitle = title
+            $scope.loadingPop.title(title)
         }
 
         // publish handler
@@ -244,6 +241,7 @@ define(function (require) {
                     // 끝 - 출판 처리
                     offCallEvent()
                     console.log('end')
+                    $rootScope.loadingProgressModal('end', '출판중')
                     // 실제 만들 page id 만 골라낸다
                     var pickThumbnailData = {}
                     _.forEach($rootScope.thumbnailBase64Data, function (n, key) {
@@ -282,6 +280,8 @@ define(function (require) {
             // thumbnail image data 수집
             function gleanThumbnail () {
                 // 전체 페이지에 대한 체크 및 수집
+                $rootScope.loadingProgressModal('start', '출판중')
+
                 allContents = ContentsService.getContents()
                 offCallEvent = $scope.$on('thumbnailImageUpdate', function (e, params) {
                     //currentPageNumber = currentPageNumber + 1
