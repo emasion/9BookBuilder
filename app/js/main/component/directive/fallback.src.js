@@ -3,7 +3,7 @@ define(function (require) {
 
     'use strict'
 
-    // @njInject
+    // @ngInject
     return function FallbackSrcDirective () {
         return {
             link: function postLink (scope, iElement, iAttrs) {

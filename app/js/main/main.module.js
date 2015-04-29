@@ -8,6 +8,7 @@ define(function (require) {
     // module
     require('js/main/component/component.module')
     require('js/main/container/container.module')
+    require('js/main/popup/gnpopup/gnpopup.module')
 
     var MainMenuController = require('js/main/layout/main.menu.ctrl')
     var MainCopyrightController = require('js/main/layout/main.copyright.ctrl')
@@ -16,7 +17,8 @@ define(function (require) {
 
     var module = angular.module('app.main', [
         'app.main.component',
-        'app.main.container'
+        'app.main.container',
+        'app.main.popup'
     ])
         .config(function ($stateProvider, $urlRouterProvider) {
             $stateProvider.decorator('views', function (state, parent) {

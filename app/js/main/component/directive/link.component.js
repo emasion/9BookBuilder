@@ -3,7 +3,7 @@ define(function (require) {
 
     'use strict'
 
-    // @njInject
+    // @ngInject
     return function LinkComponentDirective () {
         return {
             restrict: 'E',

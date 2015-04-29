@@ -1,0 +1,28 @@
+<div
+  kendo-window="win"
+  k-title="winTitle"
+  k-on-open="winOpen()"
+  k-on-close="winClose()"
+  k-on-resize="winResize()"
+  k-modal="winModal"
+  k-position="winPosition"
+  k-resizable="winResizable"
+  k-visible="winVisible"
+  >
+  <div style="display: flex;">
+    <div id="winSymbol" ng-show="winSymbolClass">
+      <i ng-class="winSymbolClass"></i>
+    </div>
+    <div id="winContainer" ></div>
+  </div>
+  <div ng-show="winOkShow || winCloseShow" style="display: inline-block; text-align: center; width: 100%; margin-top: 10px;">
+    <!--<a class="k-button k-button-icontext k-primary k-grid-update" href="#"><span class="k-icon k-update"></span>저장</a>-->
+    <a ng-click="okClick()" ng-show="winOkShow" class="k-button k-button-icontext">
+      <span class="k-icon k-update"></span>{{ okText }}
+    </a>
+    <a ng-click="cancelClick()" ng-show="winCloseShow" class="k-button k-button-icontext">
+      <span class="k-icon k-cancel"></span>{{ cancelText }}
+    </a>
+  </div>
+</div>
+

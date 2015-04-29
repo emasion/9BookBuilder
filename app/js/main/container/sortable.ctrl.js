@@ -4,7 +4,7 @@ define(function (require) {
     'use strict'
 
     // @njInject
-    return function ContainerSortableController ($scope, $rootScope, $q, $timeout, env, format, listItems, configData, ContentsService, ConverterService) {
+    return function ContainerSortableController ($scope, $rootScope, $q, $timeout, env, format, listItems, configData, ContentsService, ConverterService, PopupService) {
         console.info('ContainerSortableController')
 
         var $ = angular.element
@@ -280,22 +280,30 @@ define(function (require) {
         // delete pages
         $scope.deletePages = function () {
             if ($scope.selectedIndexes.length > 0) {
-                // 서버에 삭제
-                $scope.selectedIndexes = _.sortBy($scope.selectedIndexes)
-                ContentsService.deletePages($scope.selectedIndexes).then(function (resp) {
-                    if (resp.data.result === 'success') {
-                        console.log('remove page success!!')
-                        $scope.listItems = resp.config.data
-                        // 삭제 후 다른 페이지 선택 : 마지막인 페이지는 -1 나머지는 지운 갯수 만큼 빼준 인덱스로 viewChange
-                        if ($scope.selectedIndex >= resp.config.data.length) {
-                            $scope.selectedIndex = resp.config.data.length - 1
-                        } else {
-                            $scope.selectedIndex = $scope.selectedIndex - _.filter($scope.selectedIndexes, function (n) {
-                                return $scope.selectedIndex > n
-                            }).length
-                        }
-                        $scope.selectedIndexes = $scope.selectedIndex < 0 ? [] : [$scope.selectedIndex]
-                        $scope.viewChange()
+
+                PopupService.open($scope, 'confirm', {
+                    title: '삭제 확인',
+                    content: '"<p>선택된 페이지를 삭제하시겠습니까?</p>"',
+                    modal: true,
+                    okClick: function () {
+                        // 서버에 삭제
+                        $scope.selectedIndexes = _.sortBy($scope.selectedIndexes)
+                        ContentsService.deletePages($scope.selectedIndexes).then(function (resp) {
+                            if (resp.data.result === 'success') {
+                                console.log('remove page success!!')
+                                $scope.listItems = resp.config.data
+                                // 삭제 후 다른 페이지 선택 : 마지막인 페이지는 -1 나머지는 지운 갯수 만큼 빼준 인덱스로 viewChange
+                                if ($scope.selectedIndex >= resp.config.data.length) {
+                                    $scope.selectedIndex = resp.config.data.length - 1
+                                } else {
+                                    $scope.selectedIndex = $scope.selectedIndex - _.filter($scope.selectedIndexes, function (n) {
+                                            return $scope.selectedIndex > n
+                                        }).length
+                                }
+                                $scope.selectedIndexes = $scope.selectedIndex < 0 ? [] : [$scope.selectedIndex]
+                                $scope.viewChange()
+                            }
+                        })
                     }
                 })
             }

@@ -3,7 +3,7 @@ define(function (require) {
 
     'use strict'
 
-    // @njInject
+    // @ngInject
     return function TextComponentDirective () {
         return {
             restrict: 'E',

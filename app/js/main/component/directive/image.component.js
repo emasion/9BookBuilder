@@ -3,7 +3,7 @@ define(function (require) {
 
     'use strict'
 
-    // @njInject
+    // @ngInject
     return function ImageComponentDirective () {
         return {
             restrict: 'E',
