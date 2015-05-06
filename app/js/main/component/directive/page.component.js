@@ -17,8 +17,6 @@ define(function (require) {
             templateUrl: '../../../../templates/component/page.html',
             controller: function ($rootScope, $scope, $element, $timeout, $q, ConfigService, ContentsService, ContentsCreateService) {
 
-                $scope.pageWidth
-                $scope.pageHeight
                 $scope.pageStyle = {}
                 $scope.pageImageUrl
 
@@ -33,16 +31,25 @@ define(function (require) {
 
                 var getConfig = function () {
                     var defer = $q.defer()
-                    ConfigService.getConfigData().then(function (config) {
-                        if (config && config.layout) {
-                            $scope.pageWidth = config.layout.width
-                            $scope.pageHeight = config.layout.height
-                            $scope.pageStyle.width = $scope.pageWidth + 'px'
-                            $scope.pageStyle.height = $scope.pageHeight + 'px'
-                            configLayout = config.layout
+                    var config = ConfigService.didGetConfig()
+                    var setLayout = function (configData) {
+                        if (configData && configData.layout) {
+                            $rootScope.pageWidth = configData.layout.width
+                            $rootScope.pageHeight = configData.layout.height
+                            $scope.pageStyle.width = $rootScope.pageWidth + 'px'
+                            $scope.pageStyle.height = $rootScope.pageHeight + 'px'
+                            configLayout = configData.layout
                         }
+                    }
+                    if (config) {
+                        setLayout(config)
                         defer.resolve(config)
-                    })
+                    } else {
+                        ConfigService.getConfigData().then(function (result) {
+                            setLayout(result)
+                            defer.resolve(result)
+                        })
+                    }
                     return defer.promise
                 }
 
@@ -403,8 +410,8 @@ define(function (require) {
                                     maxHeight: parseInt(configLayout.component.maxHeight),
                                     minTop: 0.1,
                                     minLeft: 0.1,
-                                    maxRight: $scope.pageWidth,
-                                    maxBottom: $scope.pageHeight,
+                                    maxRight: $rootScope.pageWidth,
+                                    maxBottom: $rootScope.pageHeight,
                                     dragHandle: true,
                                     zoomValue: $rootScope.pageZoomValue,
                                     handlers: {

@@ -21,8 +21,17 @@ define(function (require) {
                             listItems: function (ContentsService, ConfigService) {
                                 return ContentsService.getContentsData()
                             },
-                            configData: function (ConfigService) {
-                                return ConfigService.getConfigData()
+                            configData: function ($q, ConfigService) {
+                                var defer = $q.defer()
+                                var config = ConfigService.didGetConfig()
+                                if (config) {
+                                    defer.resolve(config)
+                                } else {
+                                    ConfigService.getConfigData().then(function (result) {
+                                        defer.resolve(result)
+                                    })
+                                }
+                                return defer.promise
                             }
                         }
                     },
@@ -34,8 +43,17 @@ define(function (require) {
                         controller: 'ContainerPropertyController as containerPropertyCtrl',
                         templateUrl: 'templates/container/property.html',
                         resolve: {
-                            configData: function (ConfigService) {
-                                return ConfigService.getConfigData()
+                            configData: function ($q, ConfigService) {
+                                var defer = $q.defer()
+                                var config = ConfigService.didGetConfig()
+                                if (config) {
+                                    defer.resolve(config)
+                                } else {
+                                    ConfigService.getConfigData().then(function (result) {
+                                        defer.resolve(result)
+                                    })
+                                }
+                                return defer.promise
                             }
                         }
                     }

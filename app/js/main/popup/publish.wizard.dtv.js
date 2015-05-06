@@ -9,6 +9,7 @@ define(function (require) {
             restrict: 'E',
             transclude: true,
             scope: {
+                publishOptions: '='
             },
             templateUrl: 'templates/popup/publish.wizard.html',
             controller: function ($scope, $element, $timeout) {

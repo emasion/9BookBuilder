@@ -4,7 +4,7 @@ define(function (require) {
     'use strict'
 
     // @njInject
-    return function RootController ($rootScope, $scope, $timeout, $compile, env, format, upload, FileService, PublishService, ContentsService) {
+    return function RootController ($rootScope, $scope, $timeout, $compile, configData, env, format, upload, FileService, PublishService, ContentsService, PopupService) {
         console.info('RootController')
 
         var $ = angular.element
@@ -294,12 +294,41 @@ define(function (require) {
 
             // 출판이면
             if (cmdType === 'publishBook') {
-                var prompt = window.prompt('출판할 책 이름을 입력하세요.', '9Book')
+                // 팝업 띄운다.
+                $scope.wizardInstance = undefined
+                $scope.wizardParams = {
+                    title: configData.title,
+                    bookWidth: $rootScope.pageWidth,
+                    bookHeight: $rootScope.pageHeight
+                }
+
+                PopupService.open($scope, '', {
+                    title: '출판 설정',
+                    content: '"<publish-wizard publish-options=\'gnContentParams\'></publish-wizard>"',
+                    contentParams: 'wizardParams',
+                    instance: 'wizardInstance',
+                    btnVisible: false,
+                    closeDestroy: true,
+                    modal: true,
+                    okClick: function (inputData) {
+                        console.log(inputData)
+                        gleanThumbnail()
+                    },
+                    cancelClick: function () {}
+                })
+
+                $scope.$watch('wizardInstance', function (instance) {
+                    if (instance) {
+                        instance.center()
+                    }
+                })
+
+                /*var prompt = window.prompt('출판할 책 이름을 입력하세요.', '9Book')
                 if (prompt !== null) {
                     // thumbnail 수집 단계 진행
                     bookTitle = prompt
                     gleanThumbnail()
-                }
+                }*/
             } else {
                 // thumbnail 수집 단계 진행
                 gleanThumbnail()

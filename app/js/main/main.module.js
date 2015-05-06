@@ -35,16 +35,37 @@ define(function (require) {
             })
             $stateProvider.state('main', {
                 views: {
-                    '': { controller: 'RootController as rootCtrl' },
+                    '': {
+                        controller: 'RootController as rootCtrl',
+                        resolve: {
+                            configData: function ($q, ConfigService) {
+                                var defer = $q.defer()
+                                var config = ConfigService.didGetConfig()
+                                if (config) {
+                                    defer.resolve(config)
+                                } else {
+                                    ConfigService.getConfigData().then(function (result) {
+                                        defer.resolve(result)
+                                    })
+                                }
+                                return defer.promise
+                            }
+                        }
+                    },
                     'main.menu': { controller: 'MainMenuController as mainMenuCtrl' },
                     'main.container': {
                         controller: 'MainContainerController as mainContainerCtrl',
                         resolve: {
                             configLayoutData: function ($q, ConfigService) {
                                 var defer = $q.defer()
-                                ConfigService.getConfigData().then(function (result) {
-                                    defer.resolve(result.layout)
-                                })
+                                var config = ConfigService.didGetConfig()
+                                if (config) {
+                                    defer.resolve(config.layout)
+                                } else {
+                                    ConfigService.getConfigData().then(function (result) {
+                                        defer.resolve(result.layout)
+                                    })
+                                }
                                 return defer.promise
                             }
                         }
@@ -58,6 +79,7 @@ define(function (require) {
         .controller('MainCopyrightController', MainCopyrightController)
         .controller('MainContainerController', MainContainerController)
         .controller('RootController', RootController)
+        .directive('publishWizard', require('js/main/popup/publish.wizard.dtv'))
 
     return module
 

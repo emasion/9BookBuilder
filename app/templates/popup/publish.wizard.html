@@ -5,14 +5,35 @@
             <li class="k-state-active">옵션</li>
         </ul>
 
-        <div style="padding: 1em">
-            <li class="status {{ validationClass }}">{{ validationMessage }} </li>
+        <div class="publish-wizard-form">
+            <div class="status {{ validationClass }}">{{ validationMessage }} </div>
             <form kendo-validator="validator" ng-submit="validate($event)" class="k-content">
-                <h3>출판 옵션</h3>
                 <ul>
                     <li>
                         <label for="bookname" class="required">책 제목</label>
-                        <input type="text" id="bookname" name="bookname" class="k-textbox" placeholder="책 제목" required validationMessage="Enter {0}" style="width: 200px;" />
+                        <input type="text"
+                               id="bookname"
+                               name="bookname"
+                               class="k-textbox"
+                               placeholder="책 제목"
+                               ng-model="publishOptions.title"
+                               style="width: 380px;" />
+                    </li>
+                    <li>
+                        <label for="booksize" class="required">사이즈</label>
+                        <div style="display: inline-block;">
+                            <span>너비</span>
+                            <input kendo-numeric-text-box
+                                   id="booksize"
+                                   name="booksize"
+                                   ng-model="publishOptions.bookWidth"
+                                   style="width: 150px;" />
+                            <span style="margin-left: 10px;">높이</span>
+                            <input kendo-numeric-text-box
+                                   name="booksize"
+                                   ng-model="publishOptions.bookHeight"
+                                   style="width: 150px;" />
+                        </div>
                     </li>
                     <!--<li>
                         <label for="time">Start time</label>
@@ -49,7 +70,9 @@
         </div>
     </div>
     <div class="btn-box">
-        <button class="k-button k-primary">출판</button>
-        <button class="k-button">취소</button>
+        <kendo-button type="button" class="k-primary" ng-click="publishBtnClick()">
+            <i class="fa fa-check"></i>출판</kendo-button>
+        <kendo-button type="button" ng-click="$parent.cancelClick()">
+            <i class="fa fa-ban"></i>취소</kendo-button>
     </div>
 </div>
