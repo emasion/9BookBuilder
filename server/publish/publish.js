@@ -10,7 +10,8 @@ var Q = require('q')
 var _ = require('lodash')
 var debug = require('debug')('publish')
 var publishTempPath = 'app/viewer/preview/'
-var bookResourcePath = 'app/viewer/resource/'
+//var bookResourcePath = 'app/viewer/resource/'
+var bookResourcePath = 'app/vendor/9book/'
 var publicSourcePath = 'app/public/'
 var configConstant = require('../constant/config.js')
 
@@ -161,8 +162,8 @@ exports.publish = function (req, res) {
     var bookConfig = req.body.bookConfig
     var tempFolder = publishTempPath + _.now()
 
-    // TODO: resource 나 publish
-    // TODO: 임시 폴더를 만들어야겠네.. 만들어서 resource 는 그 폴더를 띄워주고, publish 는 그 폴더를 복사해 준다.
+    // resource 나 publish
+    // 임시 폴더를 만들어야겠네.. 만들어서 resource 는 그 폴더를 띄워주고, publish 는 그 폴더를 복사해 준다.
     // create folder
     fs.mkdirs(tempFolder, function (err) {
         if (err) {

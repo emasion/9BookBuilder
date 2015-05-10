@@ -25,6 +25,12 @@ define(function (require) {
                         $scope.validationClass = "invalid"
                     }
                 }
+
+                $scope.publishBtnClick = function () {
+                    //console.log($scope.publishOptions)
+                    $scope.$parent.gnOk($scope.publishOptions)
+                    $scope.$parent.cancelClick()
+                }
             },
             link: function () {
 

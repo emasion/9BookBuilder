@@ -234,6 +234,7 @@ define(function (require) {
             var allContents
             var offCallEvent
             var bookTitle
+            var publishOptions
 
             function captureThumbnailImage () {
 
@@ -250,7 +251,7 @@ define(function (require) {
                         }
                     })
                     console.log(pickThumbnailData)
-                    PublishService.publish(cmdType, bookTitle, pickThumbnailData).then(function (result) {
+                    PublishService.publish(cmdType, bookTitle, pickThumbnailData, publishOptions).then(function (result) {
                         console.log(result.data)
                         window.open(result.data.tempPath)
                     })
@@ -312,6 +313,7 @@ define(function (require) {
                     modal: true,
                     okClick: function (inputData) {
                         console.log(inputData)
+                        publishOptions = inputData
                         gleanThumbnail()
                     },
                     cancelClick: function () {}
